@@ -7,7 +7,6 @@ import {
   Settings,
   LogOut,
 } from 'lucide-react'
-import { useState } from 'react'
 import { cn } from '@/lib/utils'
 import { signOut } from '@/api/auth'
 import { Header } from './Header'
@@ -22,7 +21,6 @@ const navigation = [
 
 function Layout({ children }: { children: ReactNode }) {
   const location = useLocation()
-  const [sidebarOpen, setSidebarOpen] = useState(false)
 
   const handleSignOut = async () => {
     await signOut()
@@ -31,13 +29,8 @@ function Layout({ children }: { children: ReactNode }) {
 
   return (
     <div className="min-h-screen bg-gray-100">
-      {/* Desktop Sidebar - Hidden on mobile */}
-      <aside
-        className={cn(
-          'fixed inset-y-0 left-0 z-40 w-64 bg-white shadow-lg transform transition-transform duration-300 ease-in-out hidden lg:block',
-          sidebarOpen ? 'translate-x-0' : '-translate-x-full'
-        )}
-      >
+      {/* Desktop Sidebar - Always visible on desktop (lg+) */}
+      <aside className="hidden lg:flex lg:flex-col lg:fixed lg:inset-y-0 lg:w-64 lg:bg-white lg:shadow-lg lg:z-30">
         {/* Logo */}
         <div className="h-16 flex items-center px-6 border-b border-gray-200">
           <Link to="/dashboard" className="flex items-center gap-3">
@@ -47,7 +40,7 @@ function Layout({ children }: { children: ReactNode }) {
         </div>
 
         {/* Navigation */}
-        <nav className="mt-6 px-3">
+        <nav className="flex-1 mt-6 px-3">
           {navigation.map((item) => {
             const isActive = location.pathname.startsWith(item.href)
             return (
@@ -69,7 +62,7 @@ function Layout({ children }: { children: ReactNode }) {
         </nav>
 
         {/* Sign out */}
-        <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-200">
+        <div className="p-4 border-t border-gray-200">
           <button
             onClick={handleSignOut}
             className="flex items-center w-full px-3 py-2.5 text-gray-600 hover:bg-gray-50 rounded-lg transition-colors"
@@ -80,24 +73,19 @@ function Layout({ children }: { children: ReactNode }) {
         </div>
       </aside>
 
-      {/* Mobile Header */}
-      <Header />
+      {/* Mobile Layout */}
+      <div className="lg:ml-64">
+        {/* Mobile Header */}
+        <Header />
 
-      {/* Mobile Bottom Nav */}
-      <BottomNav />
+        {/* Mobile Bottom Nav */}
+        <BottomNav />
 
-      {/* Main content */}
-      <main className="lg:ml-64 min-h-screen pb-20 lg:pb-6">
-        {children}
-      </main>
-
-      {/* Mobile overlay */}
-      {sidebarOpen && (
-        <div
-          className="fixed inset-0 bg-black/50 z-30 lg:hidden"
-          onClick={() => setSidebarOpen(false)}
-        />
-      )}
+        {/* Main content */}
+        <main className="min-h-screen pb-20 lg:pb-6">
+          {children}
+        </main>
+      </div>
     </div>
   )
 }
