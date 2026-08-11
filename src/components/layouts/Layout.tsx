@@ -1,12 +1,6 @@
 import { type ReactNode } from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import {
-  Home,
-  Building2,
-  Users,
-  Settings,
-  LogOut,
-} from 'lucide-react'
+import { Home, Building2, Users, Settings, LogOut } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { signOut } from '@/api/auth'
 import { Header } from './Header'
@@ -19,7 +13,7 @@ const navigation = [
   { name: 'Pengaturan', href: '/settings', icon: Settings },
 ]
 
-function Layout({ children }: { children: ReactNode }) {
+export function Layout({ children }: { children: ReactNode }) {
   const location = useLocation()
 
   const handleSignOut = async () => {
@@ -29,9 +23,8 @@ function Layout({ children }: { children: ReactNode }) {
 
   return (
     <div className="min-h-screen bg-gray-100">
-      {/* Desktop Sidebar - Always visible on desktop (lg+) */}
-      <aside className="hidden lg:flex lg:flex-col lg:fixed lg:inset-y-0 lg:w-64 lg:bg-white lg:shadow-lg lg:z-30">
-        {/* Logo */}
+      {/* Desktop Sidebar */}
+      <aside className="hidden lg:flex lg:flex-col lg:fixed lg:inset-y-0 lg:w-64 lg:bg-white lg:shadow-lg">
         <div className="h-16 flex items-center px-6 border-b border-gray-200">
           <Link to="/dashboard" className="flex items-center gap-3">
             <Building2 className="w-8 h-8 text-primary-600" />
@@ -39,7 +32,6 @@ function Layout({ children }: { children: ReactNode }) {
           </Link>
         </div>
 
-        {/* Navigation */}
         <nav className="flex-1 mt-6 px-3">
           {navigation.map((item) => {
             const isActive = location.pathname.startsWith(item.href)
@@ -61,7 +53,6 @@ function Layout({ children }: { children: ReactNode }) {
           })}
         </nav>
 
-        {/* Sign out */}
         <div className="p-4 border-t border-gray-200">
           <button
             onClick={handleSignOut}
@@ -74,20 +65,15 @@ function Layout({ children }: { children: ReactNode }) {
       </aside>
 
       {/* Mobile Layout */}
-      <div className="lg:ml-64">
-        {/* Mobile Header */}
+      <div className="lg:ml-64 flex flex-col min-h-screen">
         <Header />
 
-        {/* Mobile Bottom Nav */}
-        <BottomNav />
-
-        {/* Main content */}
-        <main className="min-h-screen pb-40 lg:pb-6">
+        <main className="flex-1 pb-24 lg:pb-6 lg:ml-64">
           {children}
         </main>
+
+        <BottomNav />
       </div>
     </div>
   )
 }
-
-export { Layout }
