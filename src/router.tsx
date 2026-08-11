@@ -11,7 +11,6 @@ import { EditPropertyPage } from '@/pages/Properties/EditPropertyPage'
 import { TenantsPage } from '@/pages/Tenants/TenantsPage'
 import { NewTenantPage } from '@/pages/Tenants/NewTenantPage'
 import { SettingsPage } from '@/pages/Settings/SettingsPage'
-import { SeedDataPage } from '@/pages/SeedPage'
 import { Layout } from '@/components/layouts/Layout'
 
 // Protected route wrapper
@@ -60,10 +59,6 @@ const router = createBrowserRouter([
         <LoginPage />
       </PublicRoute>
     ),
-  },
-  {
-    path: '/seed',
-    element: <SeedDataPage />,
   },
   {
     path: '/',
