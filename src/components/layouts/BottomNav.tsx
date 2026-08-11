@@ -29,13 +29,10 @@ export function BottomNav() {
   const location = useLocation()
 
   return (
-    <nav
-      className={cn(
-        'fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-gray-200 lg:hidden',
-        'pb-[env(safe-area-inset-bottom)]'
-      )}
-    >
-      <div className="flex items-center justify-around h-16">
+    <nav className={cn(
+      'fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-gray-200 pb-safe lg:hidden'
+    )}>
+      <div className="flex items-center justify-around h-16 pb-safe">
         {navItems.map((item) => {
           const isActive = location.pathname.startsWith(item.href)
           return (
@@ -43,13 +40,13 @@ export function BottomNav() {
               key={item.name}
               to={item.href}
               className={cn(
-                'flex flex-col items-center justify-center gap-1 flex-1 h-full',
+                'flex flex-col items-center justify-center gap-1 flex-1 h-full py-2',
                 isActive
                   ? 'text-primary-600'
                   : 'text-gray-500'
               )}
             >
-              <item.icon className="w-5 h-5" />
+              <item.icon className="w-6 h-6" />
               <span className="text-xs font-medium">{item.name}</span>
             </Link>
           )
