@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { Select } from '@/components/ui/Select'
 import { Card, CardBody } from '@/components/ui/Card'
+import { RegionSelect } from '@/components/forms/RegionSelect'
 import type { PropertyType, RentalType } from '@/types/property'
 
 const PROPERTY_TYPES: { value: PropertyType; label: string }[] = [
@@ -19,16 +20,6 @@ const PROPERTY_TYPES: { value: PropertyType; label: string }[] = [
   { value: 'villa', label: 'Villa' },
   { value: 'parkiran', label: 'Parkiran' },
   { value: 'penginapan', label: 'Penginapan' },
-]
-
-const PROVINCES = [
-  'Bali', 'Banten', 'Bengkulu', 'DI Yogyakarta', 'DKI Jakarta', 'Gorontalo',
-  'Jambi', 'Jawa Barat', 'Jawa Tengah', 'Jawa Timur', 'Kalimantan Barat',
-  'Kalimantan Selatan', 'Kalimantan Tengah', 'Kalimantan Timur', 'Kalimantan Utara',
-  'Kepulauan Bangka Belitung', 'Kepulauan Riau', 'Lampung', 'Maluku', 'Maluku Utara',
-  'Nusa Tenggara Barat', 'Nusa Tenggara Timur', 'Papua', 'Papua Barat', 'Riau',
-  'Sulawesi Barat', 'Sulawesi Selatan', 'Sulawesi Tengah', 'Sulawesi Tenggara',
-  'Sulawesi Utara', 'Sumatera Barat', 'Sumatera Selatan', 'Sumatera Utara',
 ]
 
 export function EditPropertyPage() {
@@ -52,6 +43,9 @@ export function EditPropertyPage() {
   })
 
   const [isSubmitting, setIsSubmitting] = useState(false)
+
+  // Region IDs (from RegionSelect)
+  const [provinceId, setProvinceId] = useState<number | null>(null)
 
   // Populate form when property data is loaded
   useEffect(() => {
@@ -247,37 +241,21 @@ export function EditPropertyPage() {
               name="address"
               value={formData.address}
               onChange={handleChange}
-              placeholder="Jl. Raya No. 123"
+              placeholder="Contoh: Jl. Raya No. 123"
+            />
+
+            {/* Cascading Region Dropdowns */}
+            {/* Cascading Region Dropdowns */}
+            <RegionSelect
+              provinceId={provinceId}
+              onProvinceChange={(id) => {
+                setProvinceId(id)
+              }}
+              onRegencyChange={() => {}}
+              onDistrictChange={() => {}}
             />
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <Select
-                label="Provinsi"
-                name="province"
-                value={formData.province}
-                onChange={handleChange}
-                options={PROVINCES.map((p) => ({ value: p, label: p }))}
-                placeholder="Pilih provinsi"
-              />
-
-              <Input
-                label="Kota/Kabupaten"
-                name="city"
-                value={formData.city}
-                onChange={handleChange}
-                placeholder="Contoh: Bandung"
-              />
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <Input
-                label="Kecamatan"
-                name="district"
-                value={formData.district}
-                onChange={handleChange}
-                placeholder="Contoh: Coblong"
-              />
-
               <Input
                 label="Kode Pos"
                 name="postal_code"
@@ -285,16 +263,16 @@ export function EditPropertyPage() {
                 onChange={handleChange}
                 placeholder="Contoh: 40132"
               />
-            </div>
 
-            <Input
-              label="Nomor Telepon"
-              name="phone"
-              value={formData.phone}
-              onChange={handleChange}
-              placeholder="Contoh: 081234567890"
-              type="tel"
-            />
+              <Input
+                label="Nomor Telepon"
+                name="phone"
+                value={formData.phone}
+                onChange={handleChange}
+                placeholder="Contoh: 081234567890"
+                type="tel"
+              />
+            </div>
           </CardBody>
         </Card>
 
