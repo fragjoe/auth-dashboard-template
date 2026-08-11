@@ -8,7 +8,6 @@ DROP POLICY IF EXISTS "Users can CRUD their own tenants" ON tenants;
 DROP POLICY IF EXISTS "Users can access prices for their properties" ON rental_prices;
 DROP POLICY IF EXISTS "Users can access expenses for their properties" ON expenses;
 DROP POLICY IF EXISTS "Users can access payments for their tenants" ON payments;
-DROP POLICY IF EXISTS "Allow authenticated" ON auth;
 
 -- Properties
 ALTER TABLE properties ENABLE ROW LEVEL SECURITY;
