@@ -6,16 +6,12 @@ import {
   Users,
   Settings,
   LogOut,
-  Menu,
-  X,
 } from 'lucide-react'
 import { useState } from 'react'
 import { cn } from '@/lib/utils'
 import { signOut } from '@/api/auth'
-
-interface LayoutProps {
-  children: ReactNode
-}
+import { Header } from './Header'
+import { BottomNav } from './BottomNav'
 
 const navigation = [
   { name: 'Dashboard', href: '/dashboard', icon: Home },
@@ -24,7 +20,7 @@ const navigation = [
   { name: 'Pengaturan', href: '/settings', icon: Settings },
 ]
 
-function Layout({ children }: LayoutProps) {
+function Layout({ children }: { children: ReactNode }) {
   const location = useLocation()
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
@@ -35,27 +31,19 @@ function Layout({ children }: LayoutProps) {
 
   return (
     <div className="min-h-screen bg-gray-100">
-      {/* Mobile sidebar toggle */}
-      <div className="lg:hidden fixed top-4 left-4 z-50">
-        <button
-          onClick={() => setSidebarOpen(!sidebarOpen)}
-          className="p-2 bg-white rounded-lg shadow-md text-gray-600 hover:bg-gray-50"
-        >
-          {sidebarOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-        </button>
-      </div>
-
-      {/* Sidebar */}
+      {/* Desktop Sidebar - Hidden on mobile */}
       <aside
         className={cn(
-          'fixed inset-y-0 left-0 z-40 w-64 bg-white shadow-lg transform transition-transform duration-300 ease-in-out lg:translate-x-0',
+          'fixed inset-y-0 left-0 z-40 w-64 bg-white shadow-lg transform transition-transform duration-300 ease-in-out hidden lg:block',
           sidebarOpen ? 'translate-x-0' : '-translate-x-full'
         )}
       >
         {/* Logo */}
         <div className="h-16 flex items-center px-6 border-b border-gray-200">
-          <Building2 className="w-8 h-8 text-primary-600 mr-3" />
-          <span className="text-xl font-bold text-gray-900">PropManager</span>
+          <Link to="/dashboard" className="flex items-center gap-3">
+            <Building2 className="w-8 h-8 text-primary-600" />
+            <span className="text-xl font-bold text-gray-900">PropManager</span>
+          </Link>
         </div>
 
         {/* Navigation */}
@@ -72,7 +60,6 @@ function Layout({ children }: LayoutProps) {
                     ? 'bg-primary-50 text-primary-600 font-medium'
                     : 'text-gray-600 hover:bg-gray-50'
                 )}
-                onClick={() => setSidebarOpen(false)}
               >
                 <item.icon className="w-5 h-5 mr-3" />
                 {item.name}
@@ -93,16 +80,24 @@ function Layout({ children }: LayoutProps) {
         </div>
       </aside>
 
-      {/* Overlay for mobile */}
+      {/* Mobile Header */}
+      <Header />
+
+      {/* Mobile Bottom Nav */}
+      <BottomNav />
+
+      {/* Main content */}
+      <main className="lg:ml-64 min-h-screen pb-20 lg:pb-6">
+        {children}
+      </main>
+
+      {/* Mobile overlay */}
       {sidebarOpen && (
         <div
           className="fixed inset-0 bg-black/50 z-30 lg:hidden"
           onClick={() => setSidebarOpen(false)}
         />
       )}
-
-      {/* Main content */}
-      <main className="lg:ml-64 min-h-screen">{children}</main>
     </div>
   )
 }
