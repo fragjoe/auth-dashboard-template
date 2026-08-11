@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Database, RefreshCw, Check, AlertCircle } from 'lucide-react'
+import { Database, RefreshCw, Check, AlertCircle, ExternalLink } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import { Card, CardBody } from '@/components/ui/Card'
 
@@ -44,17 +44,21 @@ export function SeedDataPage() {
   const [progress, setProgress] = useState<SeedProgress | null>(null)
   const [error, setError] = useState<string | null>(null)
 
+  // Get Supabase credentials from environment
+  const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
+  const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY
+
   // Helper to fetch JSON
   async function fetchJson<T>(url: string): Promise<T> {
     const response = await fetch(url)
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`)
+    }
     return response.json()
   }
 
   // Helper to insert to Supabase
   async function supabaseInsert(table: string, data: unknown[]) {
-    const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
-    const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY
-
     const response = await fetch(`${supabaseUrl}/rest/v1/${table}`, {
       method: 'POST',
       headers: {
@@ -67,14 +71,21 @@ export function SeedDataPage() {
     })
 
     if (!response.ok) {
-      throw new Error(`Failed to insert to ${table}`)
+      const text = await response.text()
+      throw new Error(`Failed to insert to ${table}: ${text}`)
     }
   }
 
   const seed = async () => {
     setStatus('seeding')
     setError(null)
-    setProgress({ stage: 'Memulai...', current: 0, total: 0, count: 0 })
+
+    // Check credentials
+    if (!supabaseUrl || !supabaseKey) {
+      setStatus('error')
+      setError('Environment variables tidak ditemukan. Pastikan VITE_SUPABASE_URL dan VITE_SUPABASE_ANON_KEY sudah diset.')
+      return
+    }
 
     try {
       // 1. Seed Provinces
@@ -137,7 +148,7 @@ export function SeedDataPage() {
         })
       }
 
-      // 4. Seed Villages (optional - takes longer)
+      // 4. Seed Villages
       setProgress({ stage: '📍 Memuat villages (kelurahan/desa)...', current: 0, total: provinces.length, count: 0 })
       let totalVillages = 0
 
@@ -183,6 +194,7 @@ export function SeedDataPage() {
         count: totalVillages,
       })
     } catch (err) {
+      console.error('Seed error:', err)
       setStatus('error')
       setError((err as Error).message)
     }
@@ -202,6 +214,12 @@ export function SeedDataPage() {
             </p>
           </div>
 
+          {/* Debug Info */}
+          <div className="bg-gray-50 border border-gray-200 rounded-lg p-3 mb-4 text-xs font-mono">
+            <p>Supabase URL: {supabaseUrl ? '✅ Diset' : '❌ Tidak ada'}</p>
+            <p>Supabase Key: {supabaseKey ? '✅ Diset' : '❌ Tidak ada'}</p>
+          </div>
+
           {status === 'idle' && (
             <div className="space-y-4">
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
@@ -211,10 +229,16 @@ export function SeedDataPage() {
                 </p>
               </div>
 
-              <Button onClick={seed} className="w-full" size="lg">
+              <Button onClick={seed} className="w-full" size="lg" disabled={!supabaseUrl || !supabaseKey}>
                 <RefreshCw className="w-5 h-5 mr-2" />
                 Mulai Seed Data
               </Button>
+
+              {!supabaseUrl && (
+                <p className="text-red-500 text-sm text-center">
+                  Environment variables belum diset. Pastikan di Vercel sudah ditambahkan.
+                </p>
+              )}
             </div>
           )}
 
@@ -227,7 +251,7 @@ export function SeedDataPage() {
                     <div className="w-full bg-yellow-200 rounded-full h-2">
                       <div
                         className="bg-yellow-600 h-2 rounded-full transition-all"
-                        style={{ width: `${(progress.current / progress.total) * 100}%` }}
+                        style={{ width: progress.total > 0 ? `${(progress.current / progress.total) * 100}%` : '0%' }}
                       />
                     </div>
                     <p className="text-yellow-700 text-sm mt-1">
@@ -270,7 +294,26 @@ export function SeedDataPage() {
                   <AlertCircle className="w-5 h-5" />
                   <span className="font-bold">Error</span>
                 </div>
-                <p className="text-red-700 mt-2">{error}</p>
+                <p className="text-red-700 mt-2 text-sm">{error}</p>
+
+                <div className="mt-4 p-3 bg-red-100 rounded text-xs">
+                  <p className="font-medium text-red-800 mb-2">Kemungkinan penyebab:</p>
+                  <ol className="text-red-700 list-decimal list-inside space-y-1">
+                    <li>Environment variables belum diset di Vercel</li>
+                    <li>CORS tidak diizinkan di Supabase</li>
+                    <li>Koneksi internet terputus</li>
+                  </ol>
+                </div>
+
+                <a
+                  href="https://supabase.com/dashboard/project/_/settings/api"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 text-blue-600 hover:text-blue-800 text-sm mt-3"
+                >
+                  <ExternalLink className="w-4 h-4" />
+                  Cek Supabase API Settings
+                </a>
               </div>
 
               <Button onClick={() => { setStatus('idle'); setError(null); }} className="w-full" variant="outline">
