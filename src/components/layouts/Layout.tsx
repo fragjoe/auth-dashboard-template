@@ -82,7 +82,7 @@ function Layout({ children }: { children: ReactNode }) {
         <BottomNav />
 
         {/* Main content */}
-        <main className="min-h-screen pb-28 lg:pb-6">
+        <main className="min-h-screen pb-40 lg:pb-6">
           {children}
         </main>
       </div>
