@@ -1,16 +1,25 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Building2, Mail, Lock, AlertCircle } from 'lucide-react'
 import { signInWithEmail, signInWithGoogle } from '@/api/auth'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
+import { useAuth } from '@/hooks/useAuth'
 
 export function LoginPage() {
   const navigate = useNavigate()
+  const { user, isLoading: authLoading } = useAuth()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
+
+  // Redirect if already logged in
+  useEffect(() => {
+    if (user && !authLoading) {
+      navigate('/dashboard', { replace: true })
+    }
+  }, [user, authLoading, navigate])
 
   const handleEmailLogin = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -28,11 +37,22 @@ export function LoginPage() {
 
   const handleGoogleLogin = async () => {
     setIsLoading(true)
+    setError('')
     const response = await signInWithGoogle()
     if (response.error) {
       setError(response.error)
       setIsLoading(false)
     }
+    // OAuth redirect happens automatically
+    // User will be redirected back and useEffect will handle navigation
+  }
+
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-gray-100 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-4 border-primary-600 border-t-transparent"></div>
+      </div>
+    )
   }
 
   return (
