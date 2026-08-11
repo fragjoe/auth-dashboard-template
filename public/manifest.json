@@ -1,0 +1,19 @@
+{
+  "name": "Property Manager",
+  "short_name": "PropMgr",
+  "description": "Kelola properti kos, apartemen, dan lainnya",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#2563eb",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
