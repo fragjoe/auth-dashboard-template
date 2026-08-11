@@ -29,7 +29,7 @@ import {
 import { useCreateRooms } from '@/hooks/useRooms'
 import type { RoomStatus } from '@/types/property'
 
-type TabType = 'rooms' | 'prices' | 'expenses'
+type TabType = 'details' | 'rooms' | 'prices' | 'expenses' | 'tenants'
 
 export function PropertyDetailPage() {
   const { id } = useParams<{ id: string }>()
@@ -39,7 +39,7 @@ export function PropertyDetailPage() {
   const deleteProperty = useDeleteProperty()
   const createRooms = useCreateRooms()
 
-  const [activeTab, setActiveTab] = useState<TabType>('rooms')
+  const [activeTab, setActiveTab] = useState<TabType>('details')
   const [showAddRoomModal, setShowAddRoomModal] = useState(false)
   const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [newRoom, setNewRoom] = useState({
@@ -49,6 +49,9 @@ export function PropertyDetailPage() {
     floor: '',
     count: 1,
   })
+
+  const isPerRoom = property?.rental_type === 'per_room'
+  const isPerProperty = property?.rental_type === 'per_property'
 
   const handleAddRooms = async () => {
     if (!newRoom.room_number || !id) return
@@ -101,11 +104,21 @@ export function PropertyDetailPage() {
     )
   }
 
-  const tabs = [
-    { id: 'rooms' as const, label: 'Kamar', count: rooms?.length || 0 },
-    { id: 'prices' as const, label: 'Harga Sewa', count: property.rental_prices?.length || 0 },
-    { id: 'expenses' as const, label: 'Biaya', count: property.expenses?.length || 0 },
+  // Tabs based on rental type
+  const tabs: { id: TabType; label: string; count?: number }[] = [
+    { id: 'details', label: 'Detail' },
   ]
+
+  // Only show rooms tab for "per_room" type
+  if (isPerRoom) {
+    tabs.push({ id: 'rooms', label: 'Kamar', count: rooms?.length || 0 })
+  }
+
+  tabs.push(
+    { id: 'prices', label: 'Harga Sewa', count: property.rental_prices?.length || 0 },
+    { id: 'expenses', label: 'Biaya', count: property.expenses?.length || 0 },
+    { id: 'tenants', label: 'Penyewa' }
+  )
 
   return (
     <div className="p-6">
@@ -135,14 +148,14 @@ export function PropertyDetailPage() {
               <div className="flex items-center gap-2 mt-1">
                 <Badge variant="info">{formatPropertyType(property.type)}</Badge>
                 <span className="text-gray-500">
-                  {property.rental_type === 'per_room' ? 'Sewa per kamar' : 'Sewa per properti'}
+                  {isPerRoom ? 'Sewa per kamar' : 'Sewa per properti'}
                 </span>
               </div>
             </div>
           </div>
 
           <div className="flex gap-2">
-            <Button variant="outline" disabled>
+            <Button variant="outline" onClick={() => navigate(`/properties/${id}/edit`)}>
               <Edit className="w-4 h-4 mr-2" />
               Edit
             </Button>
@@ -154,100 +167,147 @@ export function PropertyDetailPage() {
         </div>
       </div>
 
-      {/* Property Info */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-        <Card>
-          <CardBody>
-            <div className="flex items-center gap-3">
-              <div className="bg-blue-100 p-2 rounded-lg">
-                <Home className="w-5 h-5 text-blue-600" />
-              </div>
-              <div>
-                <p className="text-sm text-gray-500">Total Kamar</p>
-                <p className="text-xl font-bold">{rooms?.length || 0}</p>
-              </div>
-            </div>
-          </CardBody>
-        </Card>
+      {/* Property Stats - only show rooms stats for per_room type */}
+      <div className={`grid grid-cols-1 gap-4 mb-6 ${isPerRoom ? 'md:grid-cols-3' : 'md:grid-cols-2'}`}>
+        {isPerRoom && (
+          <>
+            <Card>
+              <CardBody>
+                <div className="flex items-center gap-3">
+                  <div className="bg-blue-100 p-2 rounded-lg">
+                    <Home className="w-5 h-5 text-blue-600" />
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-500">Total Kamar</p>
+                    <p className="text-xl font-bold">{rooms?.length || 0}</p>
+                  </div>
+                </div>
+              </CardBody>
+            </Card>
+
+            <Card>
+              <CardBody>
+                <div className="flex items-center gap-3">
+                  <div className="bg-green-100 p-2 rounded-lg">
+                    <Users className="w-5 h-5 text-green-600" />
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-500">Kamar Terisi</p>
+                    <p className="text-xl font-bold">
+                      {rooms?.filter((r) => r.status === 'occupied').length || 0}
+                    </p>
+                  </div>
+                </div>
+              </CardBody>
+            </Card>
+
+            <Card>
+              <CardBody>
+                <div className="flex items-center gap-3">
+                  <div className="bg-purple-100 p-2 rounded-lg">
+                    <Calendar className="w-5 h-5 text-purple-600" />
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-500">Kamar Tersedia</p>
+                    <p className="text-xl font-bold">
+                      {rooms?.filter((r) => r.status === 'available').length || 0}
+                    </p>
+                  </div>
+                </div>
+              </CardBody>
+            </Card>
+          </>
+        )}
 
         <Card>
           <CardBody>
             <div className="flex items-center gap-3">
-              <div className="bg-green-100 p-2 rounded-lg">
-                <Users className="w-5 h-5 text-green-600" />
+              <div className="bg-orange-100 p-2 rounded-lg">
+                <Users className="w-5 h-5 text-orange-600" />
               </div>
               <div>
-                <p className="text-sm text-gray-500">Kamar Terisi</p>
-                <p className="text-xl font-bold">
-                  {rooms?.filter((r) => r.status === 'occupied').length || 0}
-                </p>
-              </div>
-            </div>
-          </CardBody>
-        </Card>
-
-        <Card>
-          <CardBody>
-            <div className="flex items-center gap-3">
-              <div className="bg-purple-100 p-2 rounded-lg">
-                <Calendar className="w-5 h-5 text-purple-600" />
-              </div>
-              <div>
-                <p className="text-sm text-gray-500">Kamar Tersedia</p>
-                <p className="text-xl font-bold">
-                  {rooms?.filter((r) => r.status === 'available').length || 0}
-                </p>
+                <p className="text-sm text-gray-500">Total Penyewa</p>
+                <p className="text-xl font-bold">-</p>
               </div>
             </div>
           </CardBody>
         </Card>
       </div>
 
-      {/* Location Info */}
-      {(property.address || property.city) && (
-        <Card className="mb-6">
-          <CardBody>
-            <div className="flex items-start gap-3">
-              <MapPin className="w-5 h-5 text-gray-400 mt-0.5" />
-              <div>
-                <p className="font-medium text-gray-900">Lokasi</p>
-                <p className="text-gray-600">
-                  {[property.address, property.city, property.province].filter(Boolean).join(', ')}
-                </p>
-              </div>
-            </div>
-            {property.phone && (
-              <div className="flex items-center gap-3 mt-3">
-                <Phone className="w-5 h-5 text-gray-400" />
-                <p className="text-gray-600">{property.phone}</p>
-              </div>
-            )}
-          </CardBody>
-        </Card>
-      )}
-
       {/* Tabs */}
       <div className="border-b border-gray-200 mb-6">
-        <div className="flex gap-6">
+        <div className="flex gap-6 overflow-x-auto">
           {tabs.map((tab) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`pb-4 px-1 font-medium border-b-2 transition-colors ${
+              className={`pb-4 px-1 font-medium border-b-2 transition-colors whitespace-nowrap ${
                 activeTab === tab.id
                   ? 'border-primary-600 text-primary-600'
                   : 'border-transparent text-gray-500 hover:text-gray-700'
               }`}
             >
               {tab.label}
-              <span className="ml-2 text-sm bg-gray-100 px-2 py-0.5 rounded-full">{tab.count}</span>
+              {tab.count !== undefined && (
+                <span className="ml-2 text-sm bg-gray-100 px-2 py-0.5 rounded-full">{tab.count}</span>
+              )}
             </button>
           ))}
         </div>
       </div>
 
       {/* Tab Content */}
-      {activeTab === 'rooms' && (
+      {activeTab === 'details' && (
+        <Card>
+          <CardBody>
+            <div className="space-y-4">
+              {property.description && (
+                <div>
+                  <h3 className="font-medium text-gray-900 mb-1">Deskripsi</h3>
+                  <p className="text-gray-600">{property.description}</p>
+                </div>
+              )}
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <h3 className="font-medium text-gray-900 mb-1">Tipe Properti</h3>
+                  <p className="text-gray-600">{formatPropertyType(property.type)}</p>
+                </div>
+                <div>
+                  <h3 className="font-medium text-gray-900 mb-1">Jenis Sewa</h3>
+                  <p className="text-gray-600">{isPerRoom ? 'Per Kamar' : 'Per Properti'}</p>
+                </div>
+              </div>
+
+              {(property.address || property.city || property.province) && (
+                <div className="flex items-start gap-3">
+                  <MapPin className="w-5 h-5 text-gray-400 mt-0.5" />
+                  <div>
+                    <h3 className="font-medium text-gray-900 mb-1">Lokasi</h3>
+                    <p className="text-gray-600">
+                      {[property.address, property.district, property.city, property.province, property.postal_code]
+                        .filter(Boolean)
+                        .join(', ')}
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              {property.phone && (
+                <div className="flex items-center gap-3">
+                  <Phone className="w-5 h-5 text-gray-400" />
+                  <div>
+                    <h3 className="font-medium text-gray-900 mb-1">Telepon</h3>
+                    <p className="text-gray-600">{property.phone}</p>
+                  </div>
+                </div>
+              )}
+            </div>
+          </CardBody>
+        </Card>
+      )}
+
+      {activeTab === 'rooms' && isPerRoom && (
         <div>
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-lg font-semibold">Daftar Kamar</h2>
@@ -378,67 +438,94 @@ export function PropertyDetailPage() {
         </Card>
       )}
 
-      {/* Add Room Modal */}
-      <Modal
-        isOpen={showAddRoomModal}
-        onClose={() => setShowAddRoomModal(false)}
-        title="Tambah Kamar"
-      >
-        <div className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
-            <Input
-              label="Nomor Kamar"
-              value={newRoom.room_number}
-              onChange={(e) => setNewRoom({ ...newRoom, room_number: e.target.value })}
-              placeholder="101"
-              required
-            />
-            <Input
-              label="Jumlah"
-              type="number"
-              min={1}
-              value={newRoom.count}
-              onChange={(e) => setNewRoom({ ...newRoom, count: parseInt(e.target.value) || 1 })}
-              helperText="Buat beberapa kamar sekaligus"
-            />
-          </div>
-
-          <Input
-            label="Tipe/Nama Kamar"
-            value={newRoom.room_type}
-            onChange={(e) => setNewRoom({ ...newRoom, room_type: e.target.value })}
-            placeholder="AC Lantai 2"
-          />
-
-          <Input
-            label="Lantai"
-            type="number"
-            value={newRoom.floor}
-            onChange={(e) => setNewRoom({ ...newRoom, floor: e.target.value })}
-            placeholder="1"
-          />
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Deskripsi</label>
-            <textarea
-              value={newRoom.description}
-              onChange={(e) => setNewRoom({ ...newRoom, description: e.target.value })}
-              placeholder="Deskripsi tambahan..."
-              rows={3}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
-            />
-          </div>
-
-          <div className="flex justify-end gap-3 mt-6">
-            <Button variant="outline" onClick={() => setShowAddRoomModal(false)}>
-              Batal
-            </Button>
-            <Button onClick={handleAddRooms} isLoading={createRooms.isPending}>
-              Simpan
+      {activeTab === 'tenants' && (
+        <div>
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-lg font-semibold">
+              {isPerProperty ? 'Penyewa Properti' : 'Daftar Penyewa'}
+            </h2>
+            <Button onClick={() => navigate(`/tenants/new?property_id=${id}`)}>
+              <Plus className="w-4 h-4 mr-2" />
+              Tambah Penyewa
             </Button>
           </div>
+
+          <Card>
+            <CardBody className="text-center py-8">
+              <Users className="w-12 h-12 text-gray-300 mx-auto mb-3" />
+              <p className="text-gray-500">
+                {isPerProperty
+                  ? 'Belum ada penyewa untuk properti ini'
+                  : 'Pilih kamar untuk melihat penyewanya'}
+              </p>
+            </CardBody>
+          </Card>
         </div>
-      </Modal>
+      )}
+
+      {/* Add Room Modal - only for per_room type */}
+      {isPerRoom && (
+        <Modal
+          isOpen={showAddRoomModal}
+          onClose={() => setShowAddRoomModal(false)}
+          title="Tambah Kamar"
+        >
+          <div className="space-y-4">
+            <div className="grid grid-cols-2 gap-4">
+              <Input
+                label="Nomor Kamar"
+                value={newRoom.room_number}
+                onChange={(e) => setNewRoom({ ...newRoom, room_number: e.target.value })}
+                placeholder="101"
+                required
+              />
+              <Input
+                label="Jumlah"
+                type="number"
+                min={1}
+                value={newRoom.count}
+                onChange={(e) => setNewRoom({ ...newRoom, count: parseInt(e.target.value) || 1 })}
+                helperText="Buat beberapa kamar sekaligus"
+              />
+            </div>
+
+            <Input
+              label="Tipe/Nama Kamar"
+              value={newRoom.room_type}
+              onChange={(e) => setNewRoom({ ...newRoom, room_type: e.target.value })}
+              placeholder="AC Lantai 2"
+            />
+
+            <Input
+              label="Lantai"
+              type="number"
+              value={newRoom.floor}
+              onChange={(e) => setNewRoom({ ...newRoom, floor: e.target.value })}
+              placeholder="1"
+            />
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Deskripsi</label>
+              <textarea
+                value={newRoom.description}
+                onChange={(e) => setNewRoom({ ...newRoom, description: e.target.value })}
+                placeholder="Deskripsi tambahan..."
+                rows={3}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+              />
+            </div>
+
+            <div className="flex justify-end gap-3 mt-6">
+              <Button variant="outline" onClick={() => setShowAddRoomModal(false)}>
+                Batal
+              </Button>
+              <Button onClick={handleAddRooms} isLoading={createRooms.isPending}>
+                Simpan
+              </Button>
+            </div>
+          </div>
+        </Modal>
+      )}
 
       {/* Delete Confirmation Modal */}
       <Modal

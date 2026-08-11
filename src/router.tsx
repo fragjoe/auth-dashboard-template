@@ -7,7 +7,9 @@ import { DashboardPage } from '@/pages/Dashboard/DashboardPage'
 import { PropertiesPage } from '@/pages/Properties/PropertiesPage'
 import { PropertyDetailPage } from '@/pages/Properties/PropertyDetailPage'
 import { NewPropertyPage } from '@/pages/Properties/NewPropertyPage'
+import { EditPropertyPage } from '@/pages/Properties/EditPropertyPage'
 import { TenantsPage } from '@/pages/Tenants/TenantsPage'
+import { NewTenantPage } from '@/pages/Tenants/NewTenantPage'
 import { SettingsPage } from '@/pages/Settings/SettingsPage'
 import { Layout } from '@/components/layouts/Layout'
 
@@ -95,10 +97,26 @@ const router = createBrowserRouter([
     ),
   },
   {
+    path: '/properties/:id/edit',
+    element: (
+      <ProtectedRoute>
+        <EditPropertyPage />
+      </ProtectedRoute>
+    ),
+  },
+  {
     path: '/tenants',
     element: (
       <ProtectedRoute>
         <TenantsPage />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: '/tenants/new',
+    element: (
+      <ProtectedRoute>
+        <NewTenantPage />
       </ProtectedRoute>
     ),
   },
