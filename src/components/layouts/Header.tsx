@@ -1,8 +1,6 @@
 import { useState } from 'react'
-import { Link, useLocation } from 'react-router-dom'
-import { Bell, LogOut, Menu, X } from 'lucide-react'
-import { signOut } from '@/api/auth'
-import { cn } from '@/lib/utils'
+import { useLocation } from 'react-router-dom'
+import { Bell, Menu, X } from 'lucide-react'
 
 const navigation = [
   { name: 'Dashboard', href: '/dashboard' },
@@ -14,11 +12,6 @@ const navigation = [
 export function Header() {
   const location = useLocation()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-
-  const handleSignOut = async () => {
-    await signOut()
-    window.location.href = '/login'
-  }
 
   // Get current page title
   const currentPage = navigation.find(item => location.pathname.startsWith(item.href))
@@ -67,33 +60,21 @@ export function Header() {
               {navigation.map((item) => {
                 const isActive = location.pathname.startsWith(item.href)
                 return (
-                  <Link
+                  <a
                     key={item.name}
-                    to={item.href}
+                    href={item.href}
                     onClick={() => setMobileMenuOpen(false)}
-                    className={cn(
-                      'flex items-center px-3 py-2.5 rounded-lg transition-colors',
+                    className={`block px-3 py-2.5 rounded-lg ${
                       isActive
                         ? 'bg-primary-50 text-primary-600 font-medium'
                         : 'text-gray-600 hover:bg-gray-50'
-                    )}
+                    }`}
                   >
                     {item.name}
-                  </Link>
+                  </a>
                 )
               })}
             </nav>
-
-            {/* Bottom: Sign Out */}
-            <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-200">
-              <button
-                onClick={handleSignOut}
-                className="flex items-center gap-2 w-full px-3 py-2.5 text-red-600 hover:bg-red-50 rounded-lg"
-              >
-                <LogOut className="w-5 h-5" />
-                Keluar
-              </button>
-            </div>
           </div>
         </div>
       )}

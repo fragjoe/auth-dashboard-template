@@ -1,11 +1,17 @@
-import { User, Bell, Shield, Database } from 'lucide-react'
+import { User, Bell, Shield, Database, LogOut } from 'lucide-react'
 import { useAuth } from '@/hooks/useAuth'
 import { Card, CardBody, CardHeader } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
+import { signOut } from '@/api/auth'
 
 export function SettingsPage() {
   const { user } = useAuth()
+
+  const handleSignOut = async () => {
+    await signOut()
+    window.location.href = '/login'
+  }
 
   return (
     <div className="p-6">
@@ -141,6 +147,19 @@ export function SettingsPage() {
                 </span>
               </div>
             </div>
+          </CardBody>
+        </Card>
+
+        {/* Logout Button */}
+        <Card className="border-red-200">
+          <CardBody>
+            <button
+              onClick={handleSignOut}
+              className="flex items-center justify-center gap-2 w-full py-3 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+            >
+              <LogOut className="w-5 h-5" />
+              <span className="font-medium">Keluar / Logout</span>
+            </button>
           </CardBody>
         </Card>
 
