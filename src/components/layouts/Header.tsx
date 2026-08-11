@@ -1,6 +1,5 @@
-import { useState } from 'react'
 import { useLocation } from 'react-router-dom'
-import { Bell, Menu, X } from 'lucide-react'
+import { Bell } from 'lucide-react'
 
 const navigation = [
   { name: 'Dashboard', href: '/dashboard' },
@@ -11,7 +10,6 @@ const navigation = [
 
 export function Header() {
   const location = useLocation()
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   // Get current page title
   const currentPage = navigation.find(item => location.pathname.startsWith(item.href))
@@ -20,20 +18,8 @@ export function Header() {
   return (
     <header className="sticky top-0 z-40 bg-white border-b border-gray-200 lg:hidden">
       <div className="flex items-center justify-between h-16 px-4">
-        {/* Left: Menu Button + Title */}
-        <div className="flex items-center gap-3">
-          <button
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="p-2 -ml-2 rounded-lg hover:bg-gray-100"
-          >
-            {mobileMenuOpen ? (
-              <X className="w-6 h-6 text-gray-600" />
-            ) : (
-              <Menu className="w-6 h-6 text-gray-600" />
-            )}
-          </button>
-          <h1 className="text-lg font-semibold text-gray-900">{pageTitle}</h1>
-        </div>
+        {/* Left: Title */}
+        <h1 className="text-lg font-semibold text-gray-900">{pageTitle}</h1>
 
         {/* Right: Bell Icon - Placeholder */}
         <button className="p-2 -mr-2 rounded-lg hover:bg-gray-100 relative">
@@ -42,42 +28,6 @@ export function Header() {
           <span className="absolute top-2 right-2 w-2 h-2 bg-gray-400 rounded-full" />
         </button>
       </div>
-
-      {/* Mobile Menu Overlay */}
-      {mobileMenuOpen && (
-        <div className="fixed inset-0 z-50 bg-black/50" onClick={() => setMobileMenuOpen(false)}>
-          <div
-            className="absolute left-0 top-0 bottom-0 w-72 bg-white shadow-xl"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* Logo */}
-            <div className="h-16 flex items-center px-6 border-b border-gray-200">
-              <span className="text-xl font-bold text-gray-900">PropManager</span>
-            </div>
-
-            {/* Navigation */}
-            <nav className="p-4 space-y-1">
-              {navigation.map((item) => {
-                const isActive = location.pathname.startsWith(item.href)
-                return (
-                  <a
-                    key={item.name}
-                    href={item.href}
-                    onClick={() => setMobileMenuOpen(false)}
-                    className={`block px-3 py-2.5 rounded-lg ${
-                      isActive
-                        ? 'bg-primary-50 text-primary-600 font-medium'
-                        : 'text-gray-600 hover:bg-gray-50'
-                    }`}
-                  >
-                    {item.name}
-                  </a>
-                )
-              })}
-            </nav>
-          </div>
-        </div>
-      )}
     </header>
   )
 }
