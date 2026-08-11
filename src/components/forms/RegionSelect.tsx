@@ -1,42 +1,32 @@
 import { useState, useEffect } from 'react'
 import { Select } from '@/components/ui/Select'
 import { getProvinces, getRegenciesByProvince, getDistrictsByRegency, getVillagesByDistrict } from '@/api/regions'
-import type { Province, Regency, District, Village } from '@/api/regions'
+import type { Wilayah } from '@/api/regions'
 
 interface RegionSelectProps {
-  provinceId?: number | null
-  regencyId?: number | null
-  districtId?: number | null
-  villageId?: number | null
-  onProvinceChange?: (id: number | null) => void
-  onRegencyChange?: (id: number | null) => void
-  onDistrictChange?: (id: number | null) => void
-  onVillageChange?: (id: number | null) => void
+  onProvinceChange?: (nama: string | null) => void
+  onRegencyChange?: (nama: string | null) => void
+  onDistrictChange?: (nama: string | null) => void
+  onVillageChange?: (nama: string | null) => void
   showVillage?: boolean
-  required?: boolean
 }
 
 export function RegionSelect({
-  provinceId,
-  regencyId,
-  districtId,
-  villageId,
   onProvinceChange,
   onRegencyChange,
   onDistrictChange,
   onVillageChange,
-  showVillage = false,
-  required = false,
+  showVillage = true,
 }: RegionSelectProps) {
-  const [provinces, setProvinces] = useState<Province[]>([])
-  const [regencies, setRegencies] = useState<Regency[]>([])
-  const [districts, setDistricts] = useState<District[]>([])
-  const [villages, setVillages] = useState<Village[]>([])
+  const [provinces, setProvinces] = useState<Wilayah[]>([])
+  const [regencies, setRegencies] = useState<Wilayah[]>([])
+  const [districts, setDistricts] = useState<Wilayah[]>([])
+  const [villages, setVillages] = useState<Wilayah[]>([])
 
-  const [selectedProvince, setSelectedProvince] = useState<number | ''>('')
-  const [selectedRegency, setSelectedRegency] = useState<number | ''>('')
-  const [selectedDistrict, setSelectedDistrict] = useState<number | ''>('')
-  const [selectedVillage, setSelectedVillage] = useState<number | ''>('')
+  const [selectedProvince, setSelectedProvince] = useState<string>('')
+  const [selectedRegency, setSelectedRegency] = useState<string>('')
+  const [selectedDistrict, setSelectedDistrict] = useState<string>('')
+  const [selectedVillage, setSelectedVillage] = useState<string>('')
 
   const [loadingProvinces, setLoadingProvinces] = useState(true)
   const [loadingRegencies, setLoadingRegencies] = useState(false)
@@ -49,11 +39,6 @@ export function RegionSelect({
       const data = await getProvinces()
       setProvinces(data)
       setLoadingProvinces(false)
-
-      // Set initial values if provided
-      if (provinceId) {
-        setSelectedProvince(provinceId)
-      }
     }
     loadProvinces()
   }, [])
@@ -61,168 +46,162 @@ export function RegionSelect({
   // Load regencies when province changes
   useEffect(() => {
     if (selectedProvince) {
-      const loadRegencies = async () => {
-        setLoadingRegencies(true)
-        setSelectedRegency('')
-        setSelectedDistrict('')
-        setSelectedVillage('')
-        setRegencies([])
-        setDistricts([])
-        setVillages([])
+      const province = provinces.find(p => p.nama === selectedProvince)
+      if (province) {
+        const loadRegencies = async () => {
+          setLoadingRegencies(true)
+          setSelectedRegency('')
+          setSelectedDistrict('')
+          setSelectedVillage('')
+          setRegencies([])
+          setDistricts([])
+          setVillages([])
 
-        const data = await getRegenciesByProvince(selectedProvince as number)
-        setRegencies(data)
-        setLoadingRegencies(false)
-
-        // Load initial regency if provinceId was set
-        if (provinceId && regencyId) {
-          setSelectedRegency(regencyId)
+          const data = await getRegenciesByProvince(province.kode)
+          setRegencies(data)
+          setLoadingRegencies(false)
         }
+        loadRegencies()
       }
-      loadRegencies()
     } else {
       setRegencies([])
       setSelectedRegency('')
+      setSelectedDistrict('')
+      setSelectedVillage('')
+      setDistricts([])
+      setVillages([])
     }
-  }, [selectedProvince, provinceId])
+  }, [selectedProvince, provinces])
 
   // Load districts when regency changes
   useEffect(() => {
     if (selectedRegency) {
-      const loadDistricts = async () => {
-        setLoadingDistricts(true)
-        setSelectedDistrict('')
-        setSelectedVillage('')
-        setDistricts([])
-        setVillages([])
+      const regency = regencies.find(r => r.nama === selectedRegency)
+      if (regency) {
+        const loadDistricts = async () => {
+          setLoadingDistricts(true)
+          setSelectedDistrict('')
+          setSelectedVillage('')
+          setDistricts([])
+          setVillages([])
 
-        const data = await getDistrictsByRegency(selectedRegency as number)
-        setDistricts(data)
-        setLoadingDistricts(false)
-
-        // Load initial district if regencyId was set
-        if (regencyId && districtId) {
-          setSelectedDistrict(districtId)
+          const data = await getDistrictsByRegency(regency.kode)
+          setDistricts(data)
+          setLoadingDistricts(false)
         }
+        loadDistricts()
       }
-      loadDistricts()
     } else {
       setDistricts([])
       setSelectedDistrict('')
+      setSelectedVillage('')
+      setVillages([])
     }
-  }, [selectedRegency, regencyId])
+  }, [selectedRegency, regencies])
 
   // Load villages when district changes
   useEffect(() => {
     if (selectedDistrict && showVillage) {
-      const loadVillages = async () => {
-        setLoadingVillages(true)
-        setSelectedVillage('')
-        setVillages([])
+      const district = districts.find(d => d.nama === selectedDistrict)
+      if (district) {
+        const loadVillages = async () => {
+          setLoadingVillages(true)
+          setSelectedVillage('')
+          setVillages([])
 
-        const data = await getVillagesByDistrict(selectedDistrict as number)
-        setVillages(data)
-        setLoadingVillages(false)
-
-        // Load initial village if districtId was set
-        if (districtId && villageId) {
-          setSelectedVillage(villageId)
+          const data = await getVillagesByDistrict(district.kode)
+          setVillages(data)
+          setLoadingVillages(false)
         }
+        loadVillages()
       }
-      loadVillages()
     } else {
       setVillages([])
       setSelectedVillage('')
     }
-  }, [selectedDistrict, showVillage, districtId])
+  }, [selectedDistrict, districts, showVillage])
 
   const handleProvinceChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const value = e.target.value ? parseInt(e.target.value) : null
-    setSelectedProvince(value as number | '')
+    const value = e.target.value
+    setSelectedProvince(value)
     setSelectedRegency('')
     setSelectedDistrict('')
     setSelectedVillage('')
     setRegencies([])
     setDistricts([])
     setVillages([])
-    onProvinceChange?.(value)
+    onProvinceChange?.(value || null)
     onRegencyChange?.(null)
     onDistrictChange?.(null)
     onVillageChange?.(null)
   }
 
   const handleRegencyChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const value = e.target.value ? parseInt(e.target.value) : null
-    setSelectedRegency(value as number | '')
+    const value = e.target.value
+    setSelectedRegency(value)
     setSelectedDistrict('')
     setSelectedVillage('')
     setDistricts([])
     setVillages([])
-    onRegencyChange?.(value)
+    onRegencyChange?.(value || null)
     onDistrictChange?.(null)
     onVillageChange?.(null)
   }
 
   const handleDistrictChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const value = e.target.value ? parseInt(e.target.value) : null
-    setSelectedDistrict(value as number | '')
+    const value = e.target.value
+    setSelectedDistrict(value)
     setSelectedVillage('')
     setVillages([])
-    onDistrictChange?.(value)
+    onDistrictChange?.(value || null)
     onVillageChange?.(null)
   }
 
   const handleVillageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const value = e.target.value ? parseInt(e.target.value) : null
-    setSelectedVillage(value as number | '')
-    onVillageChange?.(value)
+    const value = e.target.value
+    setSelectedVillage(value)
+    onVillageChange?.(value || null)
   }
 
   return (
     <div className="space-y-4">
-      {/* Province */}
+      {/* Provinsi */}
       <Select
         label="Provinsi"
         value={selectedProvince}
         onChange={handleProvinceChange}
-        options={provinces.map((p) => ({ value: String(p.id), label: p.name }))}
+        options={provinces.map(p => ({ value: p.nama, label: p.nama }))}
         placeholder={loadingProvinces ? 'Memuat provinsi...' : 'Pilih Provinsi'}
         disabled={loadingProvinces}
-        required={required}
       />
 
-      {/* Regency/City */}
+      {/* Kota/Kabupaten */}
       <Select
         label="Kota/Kabupaten"
         value={selectedRegency}
         onChange={handleRegencyChange}
-        options={regencies.map((r) => ({
-          value: String(r.id),
-          label: `${r.type === 'kota' ? 'Kota' : 'Kabupaten'} ${r.name}`,
-        }))}
+        options={regencies.map(r => ({ value: r.nama, label: r.nama }))}
         placeholder={loadingRegencies ? 'Memuat...' : selectedProvince ? 'Pilih Kota/Kabupaten' : 'Pilih Provinsi terlebih dahulu'}
         disabled={!selectedProvince || loadingRegencies}
-        required={required}
       />
 
-      {/* District */}
+      {/* Kecamatan */}
       <Select
         label="Kecamatan"
         value={selectedDistrict}
         onChange={handleDistrictChange}
-        options={districts.map((d) => ({ value: String(d.id), label: d.name }))}
+        options={districts.map(d => ({ value: d.nama, label: d.nama }))}
         placeholder={loadingDistricts ? 'Memuat...' : selectedRegency ? 'Pilih Kecamatan' : 'Pilih Kota/Kabupaten terlebih dahulu'}
         disabled={!selectedRegency || loadingDistricts}
-        required={required}
       />
 
-      {/* Village (optional) */}
+      {/* Kelurahan/Desa */}
       {showVillage && (
         <Select
           label="Kelurahan/Desa"
           value={selectedVillage}
           onChange={handleVillageChange}
-          options={villages.map((v) => ({ value: String(v.id), label: v.name }))}
+          options={villages.map(v => ({ value: v.nama, label: v.nama }))}
           placeholder={loadingVillages ? 'Memuat...' : selectedDistrict ? 'Pilih Kelurahan/Desa' : 'Pilih Kecamatan terlebih dahulu'}
           disabled={!selectedDistrict || loadingVillages}
         />

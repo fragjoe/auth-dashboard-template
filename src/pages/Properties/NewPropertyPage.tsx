@@ -44,8 +44,11 @@ export function NewPropertyPage() {
     status: true,
   })
 
-  // Region IDs (from RegionSelect)
-  const [provinceId, setProvinceId] = useState<number | null>(null)
+  // Region state (from RegionSelect)
+  const [_province, setProvince] = useState<string>('')
+  const [_regency, setRegency] = useState<string>('')
+  const [_district, setDistrict] = useState<string>('')
+  const [_village, setVillage] = useState<string>('')
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
@@ -275,12 +278,18 @@ export function NewPropertyPage() {
 
             {/* Cascading Region Dropdowns */}
             <RegionSelect
-              provinceId={provinceId}
-              onProvinceChange={(id) => {
-                setProvinceId(id)
+              onProvinceChange={(nama) => {
+                setProvince(nama || '')
               }}
-              onRegencyChange={() => {}}
-              onDistrictChange={() => {}}
+              onRegencyChange={(nama) => {
+                setRegency(nama || '')
+              }}
+              onDistrictChange={(nama) => {
+                setDistrict(nama || '')
+              }}
+              onVillageChange={(nama) => {
+                setVillage(nama || '')
+              }}
             />
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

@@ -1,60 +1,46 @@
 -- ============================================
--- REGIONS TABLES (Provinces, Regencies, Districts, Villages)
--- Data source: https://github.com/emsifa/api-wilayah-indonesia
+-- SINGLE WILAYAH TABLE
+-- Hierarchical kode system for Indonesian regions
+-- Format: XX.XX.XX.XXXX = Province.City.District.Village
 -- ============================================
 
--- Provinces (Provinsi)
-CREATE TABLE IF NOT EXISTS provinces (
-    id SERIAL PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
+-- Single table with hierarchical structure
+DROP TABLE IF EXISTS wilayah;
+CREATE TABLE IF NOT EXISTS wilayah (
+    kode varchar(13) NOT NULL PRIMARY KEY,
+    nama varchar(100) NOT NULL,
+    level varchar(20) NOT NULL,  -- 'province', 'regency', 'district', 'village'
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
--- Regencies/Cities (Kota/Kabupaten)
-CREATE TABLE IF NOT EXISTS regencies (
-    id SERIAL PRIMARY KEY,
-    province_id INTEGER REFERENCES provinces(id) ON DELETE CASCADE,
-    name VARCHAR(255) NOT NULL,
-    type VARCHAR(50) NOT NULL,  -- 'kabupaten' or 'kota'
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
-);
-
--- Districts (Kecamatan)
-CREATE TABLE IF NOT EXISTS districts (
-    id SERIAL PRIMARY KEY,
-    regency_id INTEGER REFERENCES regencies(id) ON DELETE CASCADE,
-    name VARCHAR(255) NOT NULL,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
-);
-
--- Villages (Kelurahan/Desa)
-CREATE TABLE IF NOT EXISTS villages (
-    id SERIAL PRIMARY KEY,
-    district_id INTEGER REFERENCES districts(id) ON DELETE CASCADE,
-    name VARCHAR(255) NOT NULL,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
-);
+-- Indexes for faster searches
+CREATE INDEX IF NOT EXISTS idx_wilayah_level ON wilayah(level);
+CREATE INDEX IF NOT EXISTS idx_wilayah_nama ON wilayah(nama);
+CREATE INDEX IF NOT EXISTS idx_wilayah_parent ON wilayah(kode);
 
 -- ============================================
 -- ROW LEVEL SECURITY
 -- ============================================
 
--- Enable RLS on all region tables
-ALTER TABLE provinces ENABLE ROW LEVEL SECURITY;
-ALTER TABLE regencies ENABLE ROW LEVEL SECURITY;
-ALTER TABLE districts ENABLE ROW LEVEL SECURITY;
-ALTER TABLE villages ENABLE ROW LEVEL SECURITY;
+ALTER TABLE wilayah ENABLE ROW LEVEL SECURITY;
 
--- Public read access (everyone can read regions)
-CREATE POLICY "Allow public read provinces" ON provinces FOR SELECT USING (true);
-CREATE POLICY "Allow public read regencies" ON regencies FOR SELECT USING (true);
-CREATE POLICY "Allow public read districts" ON districts FOR SELECT USING (true);
-CREATE POLICY "Allow public read villages" ON villages FOR SELECT USING (true);
+-- Public read access (everyone can read wilayah)
+CREATE POLICY "Allow public read wilayah" ON wilayah FOR SELECT USING (true);
 
 -- ============================================
--- INDEXES FOR BETTER PERFORMANCE
+-- NOTES FOR IMPORTING DATA
 -- ============================================
-
-CREATE INDEX IF NOT EXISTS idx_regencies_province_id ON regencies(province_id);
-CREATE INDEX IF NOT EXISTS idx_districts_regency_id ON districts(regency_id);
-CREATE INDEX IF NOT EXISTS idx_villages_district_id ON villages(district_id);
+-- 1. Your wilayah.sql file has INSERT statements for all regions
+-- 2. Edit the CREATE TABLE syntax to be PostgreSQL compatible
+-- 3. After importing, you can set the level column with:
+--
+-- UPDATE wilayah SET level =
+--   CASE
+--     WHEN LENGTH(kode) = 2 THEN 'province'
+--     WHEN LENGTH(kode) = 5 THEN 'regency'
+--     WHEN LENGTH(kode) = 8 THEN 'district'
+--     WHEN LENGTH(kode) > 8 THEN 'village'
+--   END;
+--
+-- Or if your SQL already has proper INSERT, make sure each INSERT
+-- includes the 'level' column.

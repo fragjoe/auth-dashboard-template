@@ -1,35 +1,18 @@
 import { supabase } from './supabase'
 
-export interface Province {
-  id: number
-  name: string
+export interface Wilayah {
+  kode: string
+  nama: string
+  level: 'province' | 'regency' | 'district' | 'village'
 }
 
-export interface Regency {
-  id: number
-  province_id: number
-  name: string
-  type: 'kabupaten' | 'kota'
-}
-
-export interface District {
-  id: number
-  regency_id: number
-  name: string
-}
-
-export interface Village {
-  id: number
-  district_id: number
-  name: string
-}
-
-// Get all provinces
-export async function getProvinces(): Promise<Province[]> {
+// Get all provinces (kode length = 2)
+export async function getProvinces(): Promise<Wilayah[]> {
   const { data, error } = await supabase
-    .from('provinces')
-    .select('id, name')
-    .order('name')
+    .from('wilayah')
+    .select('kode, nama, level')
+    .eq('level', 'province')
+    .order('nama')
 
   if (error) {
     console.error('Error fetching provinces:', error)
@@ -39,14 +22,14 @@ export async function getProvinces(): Promise<Province[]> {
   return data || []
 }
 
-// Get regencies by province ID
-export async function getRegenciesByProvince(provinceId: number): Promise<Regency[]> {
+// Get regencies by province kode (kode length = 5, starts with province kode)
+export async function getRegenciesByProvince(provinceKode: string): Promise<Wilayah[]> {
   const { data, error } = await supabase
-    .from('regencies')
-    .select('id, province_id, name, type')
-    .eq('province_id', provinceId)
-    .order('type')
-    .order('name')
+    .from('wilayah')
+    .select('kode, nama, level')
+    .eq('level', 'regency')
+    .like('kode', `${provinceKode}%`)
+    .order('nama')
 
   if (error) {
     console.error('Error fetching regencies:', error)
@@ -56,13 +39,14 @@ export async function getRegenciesByProvince(provinceId: number): Promise<Regenc
   return data || []
 }
 
-// Get districts by regency ID
-export async function getDistrictsByRegency(regencyId: number): Promise<District[]> {
+// Get districts by regency kode (kode length = 8, starts with regency kode)
+export async function getDistrictsByRegency(regencyKode: string): Promise<Wilayah[]> {
   const { data, error } = await supabase
-    .from('districts')
-    .select('id, regency_id, name')
-    .eq('regency_id', regencyId)
-    .order('name')
+    .from('wilayah')
+    .select('kode, nama, level')
+    .eq('level', 'district')
+    .like('kode', `${regencyKode}%`)
+    .order('nama')
 
   if (error) {
     console.error('Error fetching districts:', error)
@@ -72,13 +56,14 @@ export async function getDistrictsByRegency(regencyId: number): Promise<District
   return data || []
 }
 
-// Get villages by district ID
-export async function getVillagesByDistrict(districtId: number): Promise<Village[]> {
+// Get villages by district kode (kode length > 8, starts with district kode)
+export async function getVillagesByDistrict(districtKode: string): Promise<Wilayah[]> {
   const { data, error } = await supabase
-    .from('villages')
-    .select('id, district_id, name')
-    .eq('district_id', districtId)
-    .order('name')
+    .from('wilayah')
+    .select('kode, nama, level')
+    .eq('level', 'village')
+    .like('kode', `${districtKode}%`)
+    .order('nama')
 
   if (error) {
     console.error('Error fetching villages:', error)
