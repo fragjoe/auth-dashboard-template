@@ -65,7 +65,6 @@ export function PullToRefresh({ children, onRefresh, className }: PullToRefreshP
 
   // Calculate indicator opacity based on pull distance
   const indicatorOpacity = Math.min(pullDistance / 50, 1)
-  const indicatorScale = Math.min(pullDistance / 80 + 0.5, 1)
 
   return (
     <div
