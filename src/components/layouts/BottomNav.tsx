@@ -13,8 +13,8 @@ export function BottomNav() {
   const location = useLocation()
 
   return (
-    <nav className="lg:hidden fixed bottom-1 left-0 right-0 z-50 bg-white border-t border-gray-200 safe-bottom">
-      <div className="flex h-24 items-center justify-around">
+    <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-200 safe-bottom pb-6">
+      <div className="flex h-20 items-start justify-around pt-1">
         {navItems.map((item) => {
           const isActive = location.pathname.startsWith(item.href)
           if (item.disabled) {

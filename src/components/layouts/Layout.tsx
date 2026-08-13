@@ -79,7 +79,7 @@ export function Layout({ children }: { children: ReactNode }) {
       <div className="lg:ml-64 flex flex-col min-h-screen w-full">
         <Header />
 
-        <main className="flex-1 pb-24 lg:pb-6 w-full">
+        <main className="flex-1 pb-[120px] lg:pb-6 w-full">
           {children}
         </main>
 

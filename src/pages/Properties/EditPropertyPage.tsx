@@ -50,6 +50,9 @@ export function EditPropertyPage() {
     status: true,
   })
 
+  // Store original data for change detection
+  const [originalData, setOriginalData] = useState<typeof formData | null>(null)
+
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   // Track when property data is loaded (for RegionSelect key)
@@ -58,7 +61,7 @@ export function EditPropertyPage() {
   // Populate form when property data is loaded
   useEffect(() => {
     if (property) {
-      setFormData({
+      const data = {
         name: property.name || '',
         type: property.type || '',
         description: property.description || '',
@@ -71,7 +74,9 @@ export function EditPropertyPage() {
         postal_code: property.postal_code || '',
         phone: property.phone || '',
         status: property.status ?? true,
-      })
+      }
+      setFormData(data)
+      setOriginalData(data)
       setPropertyLoaded(true)
     }
   }, [property])
@@ -94,27 +99,34 @@ export function EditPropertyPage() {
     setIsSubmitting(true)
 
     try {
-      await updateProperty.mutateAsync({
-        id,
-        updates: {
-          name: formData.name,
-          type: formData.type as PropertyType,
-          rental_type: formData.rental_type as RentalType,
-          description: formData.description || undefined,
-          address: formData.address || undefined,
-          province: formData.province || undefined,
-          city: formData.city || undefined,
-          district: formData.district || undefined,
-          village: formData.village || undefined,
-          postal_code: formData.postal_code || undefined,
-          phone: formData.phone || undefined,
-          status: formData.status,
-        },
-      })
+      // Check if there are actual changes
+      const hasChanges = originalData && JSON.stringify(formData) !== JSON.stringify(originalData)
 
-      toast('Properti berhasil diperbarui!', 'success')
-      // Navigate back to property detail page on success
-      navigate(`/properties/${id}`, { replace: true })
+      if (hasChanges) {
+        await updateProperty.mutateAsync({
+          id,
+          updates: {
+            name: formData.name,
+            type: formData.type as PropertyType,
+            rental_type: formData.rental_type as RentalType,
+            description: formData.description || undefined,
+            address: formData.address || undefined,
+            province: formData.province || undefined,
+            city: formData.city || undefined,
+            district: formData.district || undefined,
+            village: formData.village || undefined,
+            postal_code: formData.postal_code || undefined,
+            phone: formData.phone || undefined,
+            status: formData.status,
+          },
+        })
+        toast('Properti berhasil diperbarui!', 'success')
+      } else {
+        toast('Tidak ada perubahan yang disimpan', 'info')
+      }
+
+      // Navigate back naturally (to previous page in history)
+      navigate(-1)
     } catch (error) {
       console.error('Failed to update property:', error)
       toast('Gagal menyimpan perubahan. Silakan coba lagi.', 'error')
@@ -318,7 +330,7 @@ export function EditPropertyPage() {
           <Button
             type="button"
             variant="outline"
-            onClick={() => navigate(`/properties/${id}`)}
+            onClick={() => navigate(-1)}
           >
             Batal
           </Button>
