@@ -317,7 +317,6 @@ export function NewPropertyPage() {
               value={formData.type}
               onValueChange={handleTypeChange}
               placeholder="Pilih tipe properti"
-              required
               error={errors.type && touched.type ? errors.type : undefined}
             />
           </div>
