@@ -1,10 +1,12 @@
 import { useNavigate } from 'react-router-dom'
 import { PlusCircle, Door, House, Plus } from '@phosphor-icons/react'
-import { useProperties } from '@/hooks/useProperties'
+import { useQueryClient } from '@tanstack/react-query'
+import { useProperties, propertyKeys } from '@/hooks/useProperties'
 import { useRooms } from '@/hooks/useRooms'
 import { Button } from '@/components/ui/Button'
 import { Badge } from '@/components/ui/Badge'
 import { PropertyListSkeleton } from '@/components/ui/Skeleton'
+import { PullToRefresh } from '@/components/ui/PullToRefresh'
 import type { Property, Room } from '@/types/property'
 
 // Single Property Item
@@ -150,13 +152,19 @@ function PropertyAddButton({ propertyId }: { propertyId: string }) {
 
 export function PropertiesPage() {
   const navigate = useNavigate()
+  const queryClient = useQueryClient()
   const { data: properties, isLoading } = useProperties()
 
   const perRoom = properties?.filter(p => p.rental_type === 'per_room') || []
   const perProperty = properties?.filter(p => p.rental_type === 'per_property') || []
   const allProperties = [...perProperty, ...perRoom]
 
+  const handleRefresh = async () => {
+    await queryClient.invalidateQueries({ queryKey: propertyKeys.all })
+  }
+
   return (
+    <PullToRefresh onRefresh={handleRefresh} className="no-scrollbar">
     <div className="p-4 lg:p-6 space-y-8 max-w-7xl">
       {/* All Properties Section */}
       <section className="content-fade-in">
@@ -215,5 +223,6 @@ export function PropertiesPage() {
         </div>
       )}
     </div>
+    </PullToRefresh>
   )
 }

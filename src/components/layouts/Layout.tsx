@@ -79,7 +79,7 @@ export function Layout({ children }: { children: ReactNode }) {
       <div className="lg:ml-64 flex flex-col min-h-screen w-full">
         <div className="pt-16 lg:pt-0">
           <Header />
-          <main className="flex-1 pb-[120px] lg:pb-6 w-full">
+          <main className="flex-1 pb-[120px] lg:pb-6 w-full overflow-y-auto no-scrollbar">
             {children}
           </main>
           <BottomNav />

@@ -7,6 +7,15 @@ import { signOut } from '@/api/auth'
 export function SettingsPage() {
   const { user } = useAuth()
 
+  // Mask URL for security
+  const maskUrl = (url: string) => {
+    if (!url) return 'Not configured'
+    if (url.length <= 20) return url
+    const start = url.substring(0, 8)
+    const end = url.substring(url.length - 6)
+    return `${start}...${end}`
+  }
+
   const handleSignOut = async () => {
     await signOut()
     window.location.href = '/login'
@@ -47,6 +56,7 @@ export function SettingsPage() {
                 type="text"
                 value={(user?.user_metadata?.full_name as string) || ''}
                 placeholder="Masukkan nama Anda"
+                readOnly
               />
             </div>
             <div className="flex justify-end">
@@ -73,8 +83,8 @@ export function SettingsPage() {
             </div>
             <div className="flex justify-between">
               <span className="text-muted-foreground">URL:</span>
-              <span className="text-foreground font-mono text-xs">
-                {import.meta.env.VITE_SUPABASE_URL || 'Not configured'}
+              <span className="text-foreground font-mono text-xs select-none" title={import.meta.env.VITE_SUPABASE_URL || ''}>
+                {maskUrl(import.meta.env.VITE_SUPABASE_URL || '')}
               </span>
             </div>
           </div>

@@ -1,12 +1,20 @@
 import { Users, Phone, EnvelopeSimple, Calendar } from '@phosphor-icons/react'
-import { useTenants } from '@/hooks/useTenants'
+import { useQueryClient } from '@tanstack/react-query'
+import { useTenants, tenantKeys } from '@/hooks/useTenants'
 import { Button } from '@/components/ui/Button'
+import { PullToRefresh } from '@/components/ui/PullToRefresh'
 import { formatDate, getTenantStatusBadge } from '@/lib/utils'
 
 export function TenantsPage() {
+  const queryClient = useQueryClient()
   const { data: tenants, isLoading } = useTenants()
 
+  const handleRefresh = async () => {
+    await queryClient.invalidateQueries({ queryKey: tenantKeys.all })
+  }
+
   return (
+    <PullToRefresh onRefresh={handleRefresh} className="no-scrollbar">
     <div className="p-4 lg:p-6 max-w-7xl content-fade-in">
       {/* Add Tenant Button */}
       <div className="flex justify-end mb-6">
@@ -105,5 +113,6 @@ export function TenantsPage() {
         </div>
       )}
     </div>
+    </PullToRefresh>
   )
 }
