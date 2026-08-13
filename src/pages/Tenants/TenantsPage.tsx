@@ -1,7 +1,6 @@
 import { Users, Phone, EnvelopeSimple, Calendar } from '@phosphor-icons/react'
 import { useTenants } from '@/hooks/useTenants'
 import { Button } from '@/components/ui/Button'
-import { TenantListSkeleton } from '@/components/ui/Skeleton'
 import { formatDate, getTenantStatusBadge } from '@/lib/utils'
 
 export function TenantsPage() {

@@ -22,7 +22,7 @@ function PropertyItem({ property }: { property: Property }) {
 
   const location = [
     property.village,
-    formatCity(property.city),
+    formatCity(property.city || ''),
   ].filter(Boolean).join(', ')
 
   const getStatusBadge = (rentalType: string) => {

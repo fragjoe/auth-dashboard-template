@@ -13,7 +13,6 @@ interface ComboboxProps {
   placeholder?: string
   disabled?: boolean
   className?: string
-  required?: boolean
   error?: string
 }
 
@@ -24,7 +23,6 @@ export function Combobox({
   placeholder = "Pilih...",
   disabled = false,
   className,
-  required = false,
   error,
 }: ComboboxProps) {
   let { contains } = useFilter({ sensitivity: "base" })
