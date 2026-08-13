@@ -1,12 +1,12 @@
 import { Link, useLocation } from 'react-router-dom'
-import { Home, Building2, Users, Settings } from 'lucide-react'
+import { Buildings, CalendarBlank, User, Gear } from '@phosphor-icons/react'
 import { cn } from '@/lib/utils'
 
 const navItems = [
-  { name: 'Home', href: '/dashboard', icon: Home },
-  { name: 'Properti', href: '/properties', icon: Building2 },
-  { name: 'Penyewa', href: '/tenants', icon: Users },
-  { name: 'Pengaturan', href: '/settings', icon: Settings },
+  { name: 'Properti', href: '/properties', icon: Buildings },
+  { name: 'Kalender', href: '/calendar', icon: CalendarBlank, disabled: true },
+  { name: 'Penyewa', href: '/tenants', icon: User },
+  { name: 'Pengaturan', href: '/settings', icon: Gear },
 ]
 
 export function BottomNav() {
@@ -17,6 +17,17 @@ export function BottomNav() {
       <div className="flex h-16 items-center justify-around">
         {navItems.map((item) => {
           const isActive = location.pathname.startsWith(item.href)
+          if (item.disabled) {
+            return (
+              <div
+                key={item.name}
+                className="flex flex-1 flex-col items-center justify-center gap-1 py-2 text-xs text-gray-400"
+              >
+                <item.icon weight="regular" className="w-6 h-6" />
+                <span>{item.name}</span>
+              </div>
+            )
+          }
           return (
             <Link
               key={item.name}
@@ -26,7 +37,7 @@ export function BottomNav() {
                 isActive ? 'text-primary-600' : 'text-gray-500'
               )}
             >
-              <item.icon className="w-6 h-6" />
+              <item.icon weight={isActive ? 'fill' : 'regular'} className="w-6 h-6" />
               <span>{item.name}</span>
             </Link>
           )

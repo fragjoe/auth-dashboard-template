@@ -55,6 +55,7 @@ export interface Property {
   province?: string
   city?: string
   district?: string
+  village?: string
   postal_code?: string
   phone?: string
   image_url?: string

@@ -1,16 +1,12 @@
 import { supabase } from './supabase'
 import type { Property, PropertyWithRooms, ApiResponse } from '@/types/property'
 
-// Get all properties for current user
+// Get all properties (all users can see all properties)
 export async function getProperties(): Promise<ApiResponse<Property[]>> {
   try {
-    const { data: userData, error: userError } = await supabase.auth.getUser()
-    if (userError) throw new Error(userError.message)
-
     const { data, error } = await supabase
       .from('properties')
       .select('*')
-      .eq('user_id', userData.user.id)
       .order('created_at', { ascending: false })
 
     if (error) throw new Error(error.message)
@@ -20,21 +16,26 @@ export async function getProperties(): Promise<ApiResponse<Property[]>> {
   }
 }
 
-// Get single property by ID
+// Get single property by ID (all users can view any property)
 export async function getProperty(id: string): Promise<ApiResponse<PropertyWithRooms>> {
-  try {
-    const { data: userData, error: userError } = await supabase.auth.getUser()
-    if (userError) throw new Error(userError.message)
+  // Don't query if id is empty
+  if (!id) {
+    return { data: undefined, status: 200 }
+  }
 
+  try {
     const { data: property, error: propertyError } = await supabase
       .from('properties')
       .select('*')
       .eq('id', id)
-      .eq('user_id', userData.user.id)
       .single()
 
+    // Handle case where property doesn't exist (e.g., just deleted)
+    if (propertyError?.code === 'PGRST116' || !property) {
+      return { data: undefined, status: 200 }
+    }
+
     if (propertyError) throw new Error(propertyError.message)
-    if (!property) throw new Error('Property not found')
 
     const { data: rooms, error: roomsError } = await supabase
       .from('rooms')
@@ -86,7 +87,7 @@ export async function createProperty(
       .select()
       .single()
 
-    if (error) throw new Error(error.message)
+    if (error) return { error: error.message, status: 400 }
     return { data, status: 201 }
   } catch (error) {
     return { error: (error as Error).message, status: 500 }
@@ -98,40 +99,26 @@ export async function updateProperty(
   id: string,
   updates: Partial<Property>
 ): Promise<ApiResponse<Property>> {
-  try {
-    const { data: userData, error: userError } = await supabase.auth.getUser()
-    if (userError) throw new Error(userError.message)
+  const { data, error } = await supabase
+    .from('properties')
+    .update({ ...updates, updated_at: new Date().toISOString() })
+    .eq('id', id)
+    .select()
+    .maybeSingle()
 
-    const { data, error } = await supabase
-      .from('properties')
-      .update({ ...updates, updated_at: new Date().toISOString() })
-      .eq('id', id)
-      .eq('user_id', userData.user.id)
-      .select()
-      .single()
+  if (error) throw new Error(error.message)
+  if (!data) throw new Error('Properti tidak ditemukan')
 
-    if (error) throw new Error(error.message)
-    return { data, status: 200 }
-  } catch (error) {
-    return { error: (error as Error).message, status: 500 }
-  }
+  return { data, status: 200 }
 }
 
 // Delete property
 export async function deleteProperty(id: string): Promise<ApiResponse<null>> {
-  try {
-    const { data: userData, error: userError } = await supabase.auth.getUser()
-    if (userError) throw new Error(userError.message)
+  const { error } = await supabase
+    .from('properties')
+    .delete()
+    .eq('id', id)
 
-    const { error } = await supabase
-      .from('properties')
-      .delete()
-      .eq('id', id)
-      .eq('user_id', userData.user.id)
-
-    if (error) throw new Error(error.message)
-    return { status: 204 }
-  } catch (error) {
-    return { error: (error as Error).message, status: 500 }
-  }
+  if (error) throw new Error(error.message)
+  return { status: 204 }
 }

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Building2, Mail, Lock, AlertCircle } from 'lucide-react'
+import { Buildings, EnvelopeSimple, Lock, Warning, CircleNotch } from '@phosphor-icons/react'
 import { signInWithEmail, signInWithGoogle } from '@/api/auth'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
@@ -61,7 +61,7 @@ export function LoginPage() {
         {/* Logo & Title */}
         <div className="text-center mb-8">
           <div className="inline-flex items-center justify-center w-16 h-16 bg-primary-100 rounded-full mb-4">
-            <Building2 className="w-8 h-8 text-primary-600" />
+            <Buildings weight="bold" className="w-8 h-8 text-primary-600" />
           </div>
           <h1 className="text-2xl font-bold text-gray-900">Property Manager</h1>
           <p className="text-gray-600 mt-2">Masuk untuk mengelola properti Anda</p>
@@ -71,14 +71,14 @@ export function LoginPage() {
         <div className="bg-white rounded-xl shadow-lg p-8">
           {error && (
             <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg flex items-center text-red-700">
-              <AlertCircle className="w-5 h-5 mr-3 flex-shrink-0" />
+              <Warning weight="bold" className="w-5 h-5 mr-3 flex-shrink-0" />
               <span className="text-sm">{error}</span>
             </div>
           )}
 
           <form onSubmit={handleEmailLogin} className="space-y-4">
             <div className="relative">
-              <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <EnvelopeSimple weight="bold" className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
               <Input
                 type="email"
                 placeholder="Email"
@@ -90,7 +90,7 @@ export function LoginPage() {
             </div>
 
             <div className="relative">
-              <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <Lock weight="bold" className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
               <Input
                 type="password"
                 placeholder="Password"
@@ -101,8 +101,11 @@ export function LoginPage() {
               />
             </div>
 
-            <Button type="submit" className="w-full" isLoading={isLoading}>
-              Masuk
+            <Button type="submit" className="w-full" disabled={isLoading}>
+              {isLoading ? (
+                <CircleNotch className="w-4 h-4 mr-2 animate-spin" />
+              ) : null}
+              {isLoading ? 'Memproses...' : 'Masuk'}
             </Button>
           </form>
 

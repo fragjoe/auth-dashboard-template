@@ -3,11 +3,11 @@ import { useAuth } from '@/hooks/useAuth'
 
 // Pages
 import { LoginPage } from '@/pages/Login'
-import { DashboardPage } from '@/pages/Dashboard/DashboardPage'
 import { PropertiesPage } from '@/pages/Properties/PropertiesPage'
 import { PropertyDetailPage } from '@/pages/Properties/PropertyDetailPage'
 import { NewPropertyPage } from '@/pages/Properties/NewPropertyPage'
 import { EditPropertyPage } from '@/pages/Properties/EditPropertyPage'
+import { RoomDetailPage } from '@/pages/Properties/RoomDetailPage'
 import { TenantsPage } from '@/pages/Tenants/TenantsPage'
 import { NewTenantPage } from '@/pages/Tenants/NewTenantPage'
 import { SettingsPage } from '@/pages/Settings/SettingsPage'
@@ -62,15 +62,11 @@ const router = createBrowserRouter([
   },
   {
     path: '/',
-    element: <Navigate to="/dashboard" replace />,
+    element: <Navigate to="/properties" replace />,
   },
   {
     path: '/dashboard',
-    element: (
-      <ProtectedRoute>
-        <DashboardPage />
-      </ProtectedRoute>
-    ),
+    element: <Navigate to="/properties" replace />,
   },
   {
     path: '/properties',
@@ -101,6 +97,14 @@ const router = createBrowserRouter([
     element: (
       <ProtectedRoute>
         <EditPropertyPage />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: '/properties/:propertyId/rooms/:roomId',
+    element: (
+      <ProtectedRoute>
+        <RoomDetailPage />
       </ProtectedRoute>
     ),
   },

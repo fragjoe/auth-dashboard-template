@@ -1,6 +1,6 @@
 import { useEffect, type ReactNode } from 'react'
 import { createPortal } from 'react-dom'
-import { X } from 'lucide-react'
+import { X } from '@phosphor-icons/react'
 import { cn } from '@/lib/utils'
 
 interface ModalProps {
@@ -78,7 +78,7 @@ function Modal({
                 onClick={onClose}
                 className="p-1 text-gray-400 hover:text-gray-600 transition-colors rounded-lg hover:bg-gray-100"
               >
-                <X className="w-5 h-5" />
+                <X weight="bold" className="w-5 h-5" />
               </button>
             )}
           </div>

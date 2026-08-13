@@ -1,16 +1,16 @@
 import { type ReactNode } from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import { Home, Building2, Users, Settings, LogOut } from 'lucide-react'
+import { Buildings, CalendarBlank, User, Gear, SignOut } from '@phosphor-icons/react'
 import { cn } from '@/lib/utils'
 import { signOut } from '@/api/auth'
 import { Header } from './Header'
 import { BottomNav } from './BottomNav'
 
 const navigation = [
-  { name: 'Dashboard', href: '/dashboard', icon: Home },
-  { name: 'Properti', href: '/properties', icon: Building2 },
-  { name: 'Penyewa', href: '/tenants', icon: Users },
-  { name: 'Pengaturan', href: '/settings', icon: Settings },
+  { name: 'Daftar Properti', href: '/properties', icon: Buildings },
+  { name: 'Kalender', href: '/calendar', icon: CalendarBlank, disabled: true },
+  { name: 'Penyewa', href: '/tenants', icon: User },
+  { name: 'Pengaturan', href: '/settings', icon: Gear },
 ]
 
 export function Layout({ children }: { children: ReactNode }) {
@@ -22,12 +22,12 @@ export function Layout({ children }: { children: ReactNode }) {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-gray-100 overflow-x-hidden">
       {/* Desktop Sidebar */}
       <aside className="hidden lg:flex lg:flex-col lg:fixed lg:inset-y-0 lg:w-64 lg:bg-white lg:shadow-lg">
         <div className="h-16 flex items-center px-6 border-b border-gray-200">
           <Link to="/dashboard" className="flex items-center gap-3">
-            <Building2 className="w-8 h-8 text-primary-600" />
+            <Buildings weight="bold" className="w-8 h-8 text-primary-600" />
             <span className="text-xl font-bold text-gray-900">PropManager</span>
           </Link>
         </div>
@@ -35,6 +35,17 @@ export function Layout({ children }: { children: ReactNode }) {
         <nav className="flex-1 mt-6 px-3">
           {navigation.map((item) => {
             const isActive = location.pathname.startsWith(item.href)
+            if (item.disabled) {
+              return (
+                <div
+                  key={item.name}
+                  className="flex items-center px-3 py-2.5 mb-1 rounded-lg text-gray-400 cursor-not-allowed"
+                >
+                  <item.icon weight="regular" className="w-5 h-5 mr-3" />
+                  {item.name}
+                </div>
+              )
+            }
             return (
               <Link
                 key={item.name}
@@ -46,7 +57,7 @@ export function Layout({ children }: { children: ReactNode }) {
                     : 'text-gray-600 hover:bg-gray-50'
                 )}
               >
-                <item.icon className="w-5 h-5 mr-3" />
+                <item.icon weight={isActive ? 'bold' : 'regular'} className="w-5 h-5 mr-3" />
                 {item.name}
               </Link>
             )
@@ -58,17 +69,17 @@ export function Layout({ children }: { children: ReactNode }) {
             onClick={handleSignOut}
             className="flex items-center w-full px-3 py-2.5 text-gray-600 hover:bg-gray-50 rounded-lg transition-colors"
           >
-            <LogOut className="w-5 h-5 mr-3" />
+            <SignOut weight="bold" className="w-5 h-5 mr-3" />
             Keluar
           </button>
         </div>
       </aside>
 
-      {/* Mobile Layout */}
-      <div className="lg:ml-64 flex flex-col min-h-screen">
+      {/* Main Content Container */}
+      <div className="lg:ml-64 flex flex-col min-h-screen w-full">
         <Header />
 
-        <main className="flex-1 pb-24 lg:pb-6 lg:ml-64">
+        <main className="flex-1 pb-24 lg:pb-6 w-full">
           {children}
         </main>
 

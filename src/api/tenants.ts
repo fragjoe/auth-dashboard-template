@@ -1,19 +1,13 @@
 import { supabase } from './supabase'
 import type { Tenant, TenantWithDetails, ApiResponse } from '@/types/property'
 
-// Get all tenants (with optional filters)
+// Get all tenants (with optional filters - all users can see all tenants)
 export async function getTenants(filters?: {
   property_id?: string
   room_id?: string
 }): Promise<ApiResponse<Tenant[]>> {
   try {
-    const { data: userData, error: userError } = await supabase.auth.getUser()
-    if (userError) throw new Error(userError.message)
-
-    let query = supabase
-      .from('tenants')
-      .select('*')
-      .eq('user_id', userData.user.id)
+    let query = supabase.from('tenants').select('*')
 
     if (filters?.property_id) {
       query = query.eq('property_id', filters.property_id)
@@ -31,17 +25,13 @@ export async function getTenants(filters?: {
   }
 }
 
-// Get single tenant with details
+// Get single tenant with details (all users can view any tenant)
 export async function getTenant(id: string): Promise<ApiResponse<TenantWithDetails>> {
   try {
-    const { data: userData, error: userError } = await supabase.auth.getUser()
-    if (userError) throw new Error(userError.message)
-
     const { data: tenant, error: tenantError } = await supabase
       .from('tenants')
       .select('*')
       .eq('id', id)
-      .eq('user_id', userData.user.id)
       .single()
 
     if (tenantError) throw new Error(tenantError.message)
