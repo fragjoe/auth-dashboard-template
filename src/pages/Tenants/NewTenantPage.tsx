@@ -152,7 +152,7 @@ export function NewTenantPage() {
   const availableRooms = rooms?.filter((r) => r.status === 'available') || []
 
   return (
-    <div className="p-4 lg:p-6 max-w-2xl w-full">
+    <div className="p-4 lg:p-6 max-w-2xl w-full content-fade-in">
       {/* Header */}
       <div className="mb-8">
         <Button variant="ghost" onClick={() => navigate(-1)} className="mb-4">

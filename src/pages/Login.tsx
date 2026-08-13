@@ -57,18 +57,16 @@ export function LoginPage() {
 
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
-      <div className="w-full max-w-md">
-        {/* Logo & Title */}
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-primary-100 rounded-full mb-4">
-            <Buildings weight="bold" className="w-8 h-8 text-primary-600" />
-          </div>
-          <h1 className="text-2xl font-bold text-gray-900">Property Manager</h1>
-          <p className="text-gray-600 mt-2">Masuk untuk mengelola properti Anda</p>
-        </div>
-
+      <div className="w-full max-w-md content-fade-in">
         {/* Login Card */}
-        <div className="bg-white rounded-xl shadow-lg p-8">
+        <div className="bg-white border rounded-lg p-8">
+          {/* Logo & Title */}
+          <div className="flex items-center justify-center gap-3 mb-8">
+            <div className="w-12 h-12 bg-primary-100 rounded-full flex items-center justify-center">
+              <Buildings weight="bold" className="w-6 h-6 text-primary-600" />
+            </div>
+            <h1 className="text-2xl font-bold text-gray-900">PropsManager</h1>
+          </div>
           {error && (
             <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg flex items-center text-red-700">
               <Warning weight="bold" className="w-5 h-5 mr-3 flex-shrink-0" />
@@ -86,6 +84,7 @@ export function LoginPage() {
                 onChange={(e) => setEmail(e.target.value)}
                 className="pl-10"
                 required
+                disabled
               />
             </div>
 
@@ -98,10 +97,11 @@ export function LoginPage() {
                 onChange={(e) => setPassword(e.target.value)}
                 className="pl-10"
                 required
+                disabled
               />
             </div>
 
-            <Button type="submit" className="w-full" disabled={isLoading}>
+            <Button type="submit" className="w-full" disabled>
               {isLoading ? (
                 <CircleNotch className="w-4 h-4 mr-2 animate-spin" />
               ) : null}
@@ -148,10 +148,6 @@ export function LoginPage() {
             </Button>
           </div>
         </div>
-
-        <p className="text-center text-gray-500 text-sm mt-6">
-          Demo: gunakan email dan password untuk login
-        </p>
       </div>
     </div>
   )

@@ -97,6 +97,15 @@ export function Header() {
   const showBack = needsBackButton()
   const showPropertyMenu = isPropertyDetail()
 
+  // Check if on main pages (show bell)
+  const isMainPage = () => {
+    return (
+      path === '/properties' ||
+      path === '/tenants' ||
+      path === '/settings'
+    )
+  }
+
   const handleEdit = () => {
     setShowMenu(false)
     if (propertyId) navigate(`/properties/${propertyId}/edit`)
@@ -127,7 +136,7 @@ export function Header() {
 
   return (
     <>
-      <header className="sticky top-0 z-40 bg-white border-b border-border">
+      <header className="fixed top-0 left-0 right-0 z-40 bg-white border-b border-border">
         <div className="flex items-center justify-between h-16 px-4">
           {/* Left: Back button (if needed) + Title */}
           <div className="flex items-center gap-3">
@@ -183,11 +192,11 @@ export function Header() {
                   </div>
                 )}
               </>
-            ) : (
+            ) : isMainPage() ? (
               <button className="p-2 -mr-2 rounded-lg hover:bg-muted relative">
                 <Bell weight="bold" className="w-5 h-5 text-foreground" />
               </button>
-            )}
+            ) : null}
           </div>
         </div>
       </header>

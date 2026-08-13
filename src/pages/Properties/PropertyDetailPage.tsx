@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/Button'
 import { Badge } from '@/components/ui/Badge'
 import { Modal } from '@/components/ui/Modal'
 import { Input } from '@/components/ui/Input'
+import { DetailPageSkeleton } from '@/components/ui/Skeleton'
 import {
   formatPropertyType,
   formatCurrency,
@@ -61,12 +62,8 @@ export function PropertyDetailPage() {
 
   if (isLoading) {
     return (
-      <div className="p-6">
-        <div className="animate-pulse space-y-6">
-          <div className="h-8 bg-muted rounded w-1/3" />
-          <div className="h-4 bg-muted rounded w-1/2" />
-          <div className="h-64 bg-muted rounded" />
-        </div>
+      <div className="p-4 lg:p-6 max-w-7xl">
+        <DetailPageSkeleton />
       </div>
     )
   }
@@ -99,7 +96,7 @@ export function PropertyDetailPage() {
   )
 
   return (
-    <div className="p-4 lg:p-6 max-w-7xl">
+    <div className="p-4 lg:p-6 max-w-7xl content-fade-in">
       {/* Tabs */}
       <div className="border-b border-border mb-6">
         <div className="flex gap-6 overflow-x-auto">
@@ -124,55 +121,53 @@ export function PropertyDetailPage() {
 
       {/* Tab Content */}
       {activeTab === 'details' && (
-        <div className="bg-white border rounded-lg p-6">
-          <div className="space-y-4">
-            {property.description && (
-              <div>
-                <h3 className="font-medium text-foreground mb-1">Deskripsi</h3>
-                <p className="text-muted-foreground">{property.description}</p>
-              </div>
-            )}
+        <div className="bg-white border rounded-lg p-6 space-y-4">
+          {property.description && (
+            <div>
+              <h3 className="font-medium text-foreground mb-1">Deskripsi</h3>
+              <p className="text-muted-foreground">{property.description}</p>
+            </div>
+          )}
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <h3 className="font-medium text-foreground mb-1">Tipe Properti</h3>
+              <p className="text-muted-foreground">{formatPropertyType(property.type)}</p>
+            </div>
+            <div>
+              <h3 className="font-medium text-foreground mb-1">Jenis Sewa</h3>
+              <p className="text-muted-foreground">{isPerRoom ? 'Per Kamar' : 'Per Properti'}</p>
+            </div>
+          </div>
+
+          {(property.address || property.city || property.province) && (
+            <div className="flex items-start gap-3">
+              <MapPin weight="bold" className="w-5 h-5 text-muted-foreground mt-0.5" />
               <div>
-                <h3 className="font-medium text-foreground mb-1">Tipe Properti</h3>
-                <p className="text-muted-foreground">{formatPropertyType(property.type)}</p>
-              </div>
-              <div>
-                <h3 className="font-medium text-foreground mb-1">Jenis Sewa</h3>
-                <p className="text-muted-foreground">{isPerRoom ? 'Per Kamar' : 'Per Properti'}</p>
+                <h3 className="font-medium text-foreground mb-1">Lokasi</h3>
+                <p className="text-muted-foreground">
+                  {[property.address, property.district, property.city, property.province, property.postal_code]
+                    .filter(Boolean)
+                    .join(', ')}
+                </p>
               </div>
             </div>
+          )}
 
-            {(property.address || property.city || property.province) && (
-              <div className="flex items-start gap-3">
-                <MapPin weight="bold" className="w-5 h-5 text-muted-foreground mt-0.5" />
-                <div>
-                  <h3 className="font-medium text-foreground mb-1">Lokasi</h3>
-                  <p className="text-muted-foreground">
-                    {[property.address, property.district, property.city, property.province, property.postal_code]
-                      .filter(Boolean)
-                      .join(', ')}
-                  </p>
-                </div>
+          {property.phone && (
+            <div className="flex items-center gap-3">
+              <Phone weight="bold" className="w-5 h-5 text-muted-foreground" />
+              <div>
+                <h3 className="font-medium text-foreground mb-1">Telepon</h3>
+                <p className="text-muted-foreground">{property.phone}</p>
               </div>
-            )}
-
-            {property.phone && (
-              <div className="flex items-center gap-3">
-                <Phone weight="bold" className="w-5 h-5 text-muted-foreground" />
-                <div>
-                  <h3 className="font-medium text-foreground mb-1">Telepon</h3>
-                  <p className="text-muted-foreground">{property.phone}</p>
-                </div>
-              </div>
-            )}
-          </div>
+            </div>
+          )}
         </div>
       )}
 
       {activeTab === 'rooms' && isPerRoom && (
-        <div>
+        <div className="scale-in">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-lg font-semibold">Daftar Kamar</h2>
             <Button onClick={() => setShowAddRoomModal(true)}>
@@ -182,13 +177,13 @@ export function PropertyDetailPage() {
           </div>
 
           {rooms && rooms.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 content-fade-in">
               {rooms.map((room) => {
                 const statusBadge = getRoomStatusBadge(room.status)
                 return (
                   <div
                     key={room.id}
-                    className="p-4 rounded-lg border hover:bg-muted/50 hover:border-primary cursor-pointer transition-colors"
+                    className="p-4 rounded-lg border bg-white hover:bg-muted/50 hover:border-primary cursor-pointer transition-all duration-200 card-hover"
                     onClick={() => navigate(`/properties/${id}/rooms/${room.id}`)}
                   >
                     <div className="flex justify-between items-start mb-3">
@@ -213,7 +208,7 @@ export function PropertyDetailPage() {
               })}
             </div>
           ) : (
-            <div className="text-center py-12 rounded-lg border border-dashed">
+            <div className="text-center py-12 rounded-lg border border-dashed content-fade-in">
               <House weight="bold" className="w-12 h-12 text-muted-foreground/50 mx-auto mb-3" />
               <p className="text-muted-foreground">Belum ada kamar</p>
               <Button variant="outline" className="mt-4" onClick={() => setShowAddRoomModal(true)}>
@@ -295,7 +290,7 @@ export function PropertyDetailPage() {
       )}
 
       {activeTab === 'tenants' && (
-        <div>
+        <div className="scale-in">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-lg font-semibold">
               {isPerProperty ? 'Penyewa Properti' : 'Daftar Penyewa'}
@@ -306,7 +301,7 @@ export function PropertyDetailPage() {
             </Button>
           </div>
 
-          <div className="text-center py-12 rounded-lg border border-dashed">
+          <div className="text-center py-12 rounded-lg border border-dashed content-fade-in">
             <Users weight="bold" className="w-12 h-12 text-muted-foreground/50 mx-auto mb-3" />
             <p className="text-muted-foreground">
               {isPerProperty

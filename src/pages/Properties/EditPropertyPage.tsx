@@ -13,6 +13,7 @@ import {
 } from '@/components/ui/Select'
 import { RegionSelect } from '@/components/forms/RegionSelect'
 import { useToast } from '@/components/ui/Toast'
+import { FormSkeleton } from '@/components/ui/Skeleton'
 import type { PropertyType, RentalType } from '@/types/property'
 
 const propertyTypeLabels: Record<PropertyType, string> = {
@@ -137,11 +138,8 @@ export function EditPropertyPage() {
 
   if (isLoading) {
     return (
-      <div className="p-6">
-        <div className="animate-pulse space-y-6">
-          <div className="h-8 bg-muted rounded w-1/3" />
-          <div className="h-64 bg-muted rounded" />
-        </div>
+      <div className="p-4 lg:p-6 max-w-2xl w-full">
+        <FormSkeleton />
       </div>
     )
   }
@@ -158,7 +156,7 @@ export function EditPropertyPage() {
   }
 
   return (
-    <div className="p-4 lg:p-6 max-w-2xl w-full">
+    <div className="p-4 lg:p-6 max-w-2xl w-full content-fade-in">
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Basic Info */}
         <div className="bg-white border rounded-lg p-6 space-y-6">

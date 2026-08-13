@@ -77,13 +77,13 @@ export function Layout({ children }: { children: ReactNode }) {
 
       {/* Main Content Container */}
       <div className="lg:ml-64 flex flex-col min-h-screen w-full">
-        <Header />
-
-        <main className="flex-1 pb-[120px] lg:pb-6 w-full">
-          {children}
-        </main>
-
-        <BottomNav />
+        <div className="pt-16 lg:pt-0">
+          <Header />
+          <main className="flex-1 pb-[120px] lg:pb-6 w-full">
+            {children}
+          </main>
+          <BottomNav />
+        </div>
       </div>
     </div>
   )

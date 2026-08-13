@@ -176,7 +176,7 @@
 
 .animate-in {
   animation-duration: 150ms;
-  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  animation-timing-function: ease-out;
   animation-fill-mode: forwards;
 }
 
@@ -200,7 +200,7 @@
 @keyframes zoomIn95 {
   from {
     opacity: 0;
-    transform: scale(0.95);
+    transform: scale(0.98);
   }
   to {
     opacity: 1;
@@ -215,6 +215,70 @@
 *:focus-visible {
   outline: 2px solid hsl(var(--ring));
   outline-offset: 2px;
+}
+
+/* ========================================
+   PAGE TRANSITIONS - Mobile App Feel
+   ======================================== */
+
+/* Quick fade in - mobile native feel */
+.content-fade-in {
+  animation: contentFadeIn 200ms ease-out;
+}
+
+@keyframes contentFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Slide out to bottom - for toast dismissal */
+.slide-out-to-bottom {
+  animation: slideOutToBottom 200ms ease-in forwards;
+}
+
+@keyframes slideOutToBottom {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+
+/* Toast slide in from bottom */
+.toast-slide-in {
+  animation: toastSlideIn 200ms ease-out forwards;
+}
+
+@keyframes toastSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Subtle card hover */
+.card-hover {
+  transition: transform 150ms ease-out, background-color 150ms ease-out;
+}
+
+.card-hover:hover {
+  transform: translateY(-1px);
+}
+
+/* Button press effect */
+.btn-press:active {
+  transform: scale(0.98);
 }
 
 /* ========================================

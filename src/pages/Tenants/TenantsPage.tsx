@@ -1,13 +1,14 @@
 import { Users, Phone, EnvelopeSimple, Calendar } from '@phosphor-icons/react'
 import { useTenants } from '@/hooks/useTenants'
 import { Button } from '@/components/ui/Button'
+import { TenantListSkeleton } from '@/components/ui/Skeleton'
 import { formatDate, getTenantStatusBadge } from '@/lib/utils'
 
 export function TenantsPage() {
   const { data: tenants, isLoading } = useTenants()
 
   return (
-    <div className="p-4 lg:p-6 max-w-7xl">
+    <div className="p-4 lg:p-6 max-w-7xl content-fade-in">
       {/* Add Tenant Button */}
       <div className="flex justify-end mb-6">
         <Button disabled>
@@ -19,31 +20,31 @@ export function TenantsPage() {
       {isLoading ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {[1, 2, 3, 4, 5, 6].map((i) => (
-            <div key={i} className="animate-pulse p-4 rounded-lg border">
+            <div key={i} className="p-4 rounded-lg border">
               <div className="flex items-start justify-between mb-4">
                 <div className="flex items-center gap-3">
-                  <div className="bg-muted h-10 w-10 rounded-full" />
+                  <div className="bg-muted h-10 w-10 rounded-full animate-pulse" />
                   <div className="flex-1">
-                    <div className="bg-muted h-4 w-24 rounded" />
-                    <div className="bg-muted h-3 w-16 rounded mt-2" />
+                    <div className="bg-muted h-4 w-24 rounded animate-pulse" />
+                    <div className="bg-muted h-3 w-16 rounded mt-2 animate-pulse" />
                   </div>
                 </div>
               </div>
               <div className="space-y-2">
-                <div className="bg-muted h-3 w-full rounded" />
-                <div className="bg-muted h-3 w-2/3 rounded" />
+                <div className="bg-muted h-3 w-full rounded animate-pulse" />
+                <div className="bg-muted h-3 w-2/3 rounded animate-pulse" />
               </div>
             </div>
           ))}
         </div>
       ) : tenants && tenants.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 content-fade-in">
           {tenants.map((tenant) => {
             const statusBadge = getTenantStatusBadge(tenant.status)
             return (
               <div
                 key={tenant.id}
-                className="p-4 rounded-lg border hover:bg-muted/50 hover:border-primary cursor-pointer transition-colors"
+                className="p-4 rounded-lg border bg-white hover:bg-muted/50 hover:border-primary cursor-pointer transition-all duration-200 card-hover"
               >
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex items-center gap-3">
@@ -96,7 +97,7 @@ export function TenantsPage() {
           })}
         </div>
       ) : (
-        <div className="text-center py-12 rounded-lg border border-dashed">
+        <div className="text-center py-12 rounded-lg border border-dashed content-fade-in">
           <Users weight="bold" className="w-12 h-12 text-muted-foreground/50 mx-auto mb-4" />
           <h3 className="text-lg font-medium text-foreground mb-2">Belum ada penyewa</h3>
           <p className="text-muted-foreground">

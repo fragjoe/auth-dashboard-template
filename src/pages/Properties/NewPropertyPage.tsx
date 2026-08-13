@@ -13,6 +13,11 @@ interface FormErrors {
   name?: string
   type?: string
   rental_type?: string
+  address?: string
+  province?: string
+  city?: string
+  district?: string
+  village?: string
 }
 
 const propertyTypes = [
@@ -95,6 +100,28 @@ export function NewPropertyPage() {
     return Object.keys(newErrors).length === 0
   }
 
+  const validateStep3 = () => {
+    const newErrors: FormErrors = {}
+    if (!formData.address.trim()) {
+      newErrors.address = 'Alamat wajib diisi'
+    }
+    if (!formData.province) {
+      newErrors.province = 'Provinsi wajib dipilih'
+    }
+    if (!formData.city) {
+      newErrors.city = 'Kabupaten/Kota wajib dipilih'
+    }
+    if (!formData.district) {
+      newErrors.district = 'Kecamatan wajib dipilih'
+    }
+    if (!formData.village) {
+      newErrors.village = 'Kelurahan wajib dipilih'
+    }
+    setErrors(newErrors)
+    setTouched((prev) => ({ ...prev, address: true, province: true, city: true, district: true, village: true }))
+    return Object.keys(newErrors).length === 0
+  }
+
   const handleNext = () => {
     if (step === 1) {
       if (validateStep1()) {
@@ -112,21 +139,40 @@ export function NewPropertyPage() {
   }
 
   const handleRegionChange = {
-    province: (value: string) => setFormData((prev) => ({ ...prev, province: value })),
-    city: (value: string) => setFormData((prev) => ({ ...prev, city: value })),
-    district: (value: string) => setFormData((prev) => ({ ...prev, district: value })),
-    village: (value: string) => setFormData((prev) => ({ ...prev, village: value })),
+    province: (value: string) => {
+      setFormData((prev) => ({ ...prev, province: value }))
+      setTouched((prev) => ({ ...prev, province: true }))
+      if (errors.province) setErrors((prev) => ({ ...prev, province: undefined }))
+    },
+    city: (value: string) => {
+      setFormData((prev) => ({ ...prev, city: value }))
+      setTouched((prev) => ({ ...prev, city: true }))
+      if (errors.city) setErrors((prev) => ({ ...prev, city: undefined }))
+    },
+    district: (value: string) => {
+      setFormData((prev) => ({ ...prev, district: value }))
+      setTouched((prev) => ({ ...prev, district: true }))
+      if (errors.district) setErrors((prev) => ({ ...prev, district: undefined }))
+    },
+    village: (value: string) => {
+      setFormData((prev) => ({ ...prev, village: value }))
+      setTouched((prev) => ({ ...prev, village: true }))
+      if (errors.village) setErrors((prev) => ({ ...prev, village: undefined }))
+    },
   }
 
   const handleSubmit = async () => {
     // Final validation
     const step1Valid = validateStep1()
     const step2Valid = validateStep2()
-    if (!step1Valid || !step2Valid) {
+    const step3Valid = validateStep3()
+    if (!step1Valid || !step2Valid || !step3Valid) {
       if (step === 1) {
         window.scrollTo({ top: 0, behavior: 'smooth' })
       } else if (step === 2) {
         setStep(2)
+      } else if (step === 3) {
+        setStep(3)
       }
       return
     }
@@ -182,34 +228,50 @@ export function NewPropertyPage() {
         </div>
       )
     }
+    if (stepNum === 3 && Object.keys(errors).length > 0) {
+      return (
+        <div className="flex items-center gap-2 p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm mb-4">
+          <WarningCircle weight="fill" className="w-5 h-5 flex-shrink-0" />
+          <span>Mohon lengkapi field lokasi yang wajib diisi</span>
+        </div>
+      )
+    }
     return null
   }
 
   return (
-    <div className="p-4 lg:p-6 max-w-2xl w-full">
+    <div className="p-4 lg:p-6 max-w-2xl w-full content-fade-in">
       {/* Progress Steps */}
-      <div className="flex items-center justify-between mb-8 overflow-x-auto pb-2">
+      <div className="flex items-center justify-center mb-8">
         {[
           { num: 1, label: 'Detail', required: true },
-          { num: 2, label: 'Jenis Sewa', required: true },
+          { num: 2, label: 'Jenis', required: true },
           { num: 3, label: 'Lokasi' },
         ].map((s, idx) => (
-          <div key={s.num} className="flex items-center flex-shrink-0">
-            <div
-              className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center font-semibold text-sm sm:text-base ${
-                step >= s.num
-                  ? 'bg-primary text-primary-foreground'
-                  : 'bg-muted text-muted-foreground'
-              }`}
-            >
-              {step > s.num ? <Check weight="bold" className="w-4 h-4 sm:w-5 sm:h-5" /> : s.num}
+          <div key={s.num} className="flex items-center">
+            {/* Circle & Label */}
+            <div className="flex flex-col items-center justify-center">
+              <div
+                className={`w-8 h-8 rounded-full flex items-center justify-center font-semibold text-sm transition-all duration-300 ${
+                  step >= s.num
+                    ? 'bg-primary text-primary-foreground'
+                    : 'bg-muted text-muted-foreground'
+                }`}
+              >
+                {step > s.num ? <Check weight="bold" className="w-4 h-4" /> : s.num}
+              </div>
+              <span className={`mt-1 text-xs font-medium whitespace-nowrap ${step >= s.num ? 'text-foreground' : 'text-muted-foreground'}`}>
+                {s.label}
+                {s.required}
+              </span>
             </div>
-            <span className={`ml-2 sm:ml-3 font-medium text-xs sm:text-base flex items-center gap-1 ${step >= s.num ? 'text-foreground' : 'text-muted-foreground'}`}>
-              {s.label}
-              {s.required && <span className="text-red-500">*</span>}
-            </span>
+            {/* Connecting Line */}
             {idx < 2 && (
-              <div className={`w-8 sm:w-12 h-1 mx-2 sm:mx-4 rounded flex-shrink-0 ${step > s.num ? 'bg-primary' : 'bg-muted'}`} />
+              <div
+                className={`w-10 h-0.5 mx-1 rounded transition-all duration-300 -mt-4 ${
+                  step > idx + 1 ? 'bg-primary' : 'bg-muted'
+                }`}
+              />
             )}
           </div>
         ))}
@@ -226,7 +288,6 @@ export function NewPropertyPage() {
             </div>
             <div>
               <h2 className="text-lg font-semibold">Informasi Properti</h2>
-              <p className="text-xs text-muted-foreground">Field bertanda <span className="text-red-500">*</span> wajib diisi</p>
             </div>
           </div>
 
@@ -289,11 +350,10 @@ export function NewPropertyPage() {
             </div>
             <div>
               <h2 className="text-lg font-semibold">Jenis Sewa</h2>
-              <p className="text-xs text-muted-foreground">Field bertanda <span className="text-red-500">*</span> wajib dipilih</p>
             </div>
           </div>
 
-          <p className="text-muted-foreground">Pilih model penyewaan untuk properti ini:</p>
+          <p className="text-muted-foreground">Pilih model penyewaan untuk properti ini: <span className="text-red-500">*</span></p>
 
           <div className="space-y-4">
             <label
@@ -314,7 +374,7 @@ export function NewPropertyPage() {
                 className="mt-1 mr-4"
               />
               <div>
-                <h3 className="font-semibold text-foreground">Per Kamar <span className="text-red-500">*</span></h3>
+                <h3 className="font-semibold text-foreground">Per Kamar</h3>
                 <p className="text-sm text-muted-foreground mt-1">
                   Cocok untuk Kos, Apartemen, Homestay, Hotel. Setiap kamar bisa disewa
                   oleh penyewa berbeda.
@@ -340,7 +400,7 @@ export function NewPropertyPage() {
                 className="mt-1 mr-4"
               />
               <div>
-                <h3 className="font-semibold text-foreground">Per Properti <span className="text-red-500">*</span></h3>
+                <h3 className="font-semibold text-foreground">Per Properti</h3>
                 <p className="text-sm text-muted-foreground mt-1">
                   Cocok untuk Rumah, Kontrakan, Villa, Ruko. Seluruh properti disewa
                   oleh satu penyewa.
@@ -361,9 +421,25 @@ export function NewPropertyPage() {
             <h2 className="text-lg font-semibold">Lokasi & Kontak</h2>
           </div>
 
+          {/* Image Upload - Dummy */}
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-gray-700">
+              Foto Properti
+            </label>
+            <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 flex flex-col items-center justify-center text-center">
+              <div className="w-12 h-12 bg-muted rounded-full flex items-center justify-center mb-3">
+                <svg className="w-6 h-6 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+              </div>
+              <p className="text-sm text-muted-foreground mb-1">Klik untuk upload foto</p>
+              <p className="text-xs text-muted-foreground">PNG, JPG hingga 5MB</p>
+            </div>
+          </div>
+
           <div className="space-y-2">
             <label htmlFor="address" className="text-sm font-medium text-gray-700">
-              Alamat
+              Alamat <span className="text-red-500">*</span>
             </label>
             <Input
               id="address"
@@ -371,26 +447,36 @@ export function NewPropertyPage() {
               value={formData.address}
               onChange={handleChange}
               placeholder="Contoh: Jl. Raya No. 123"
+              className={errors.address && touched.address ? 'border-red-500' : ''}
             />
+            {errors.address && touched.address && (
+              <p className="text-xs text-red-500">{errors.address}</p>
+            )}
           </div>
 
           {/* Region Select - Searchable */}
           <div className="space-y-1">
             <label className="text-sm font-medium text-gray-700">
-              Wilayah Indonesia
+              Wilayah Indonesia <span className="text-red-500">*</span>
             </label>
             <RegionSelect
               onProvinceChange={handleRegionChange.province}
               onRegencyChange={handleRegionChange.city}
               onDistrictChange={handleRegionChange.district}
               onVillageChange={handleRegionChange.village}
+              error={{
+                province: touched.province ? errors.province : undefined,
+                regency: touched.city ? errors.city : undefined,
+                district: touched.district ? errors.district : undefined,
+                village: touched.village ? errors.village : undefined,
+              }}
             />
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <label htmlFor="postal_code" className="text-sm font-medium text-gray-700">
-                Kode Pos
+              <label htmlFor="postal_code" className="text-sm font-medium text-gray-700 flex items-center gap-2">
+                Kode Pos <span className="text-xs bg-muted px-1.5 py-0.5 rounded text-muted-foreground">Opsional</span>
               </label>
               <Input
                 id="postal_code"
@@ -402,8 +488,8 @@ export function NewPropertyPage() {
             </div>
 
             <div className="space-y-2">
-              <label htmlFor="phone" className="text-sm font-medium text-gray-700">
-                Nomor Telepon
+              <label htmlFor="phone" className="text-sm font-medium text-gray-700 flex items-center gap-2">
+                Nomor Telepon <span className="text-xs bg-muted px-1.5 py-0.5 rounded text-muted-foreground">Opsional</span>
               </label>
               <Input
                 id="phone"

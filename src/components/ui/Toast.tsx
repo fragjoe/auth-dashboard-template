@@ -49,9 +49,16 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
 }
 
 function ToastItem({ toast, onRemove }: { toast: Toast; onRemove: (id: string) => void }) {
+  const [isLeaving, setIsLeaving] = useState(false)
+
   useEffect(() => {
     const timer = setTimeout(() => {
-      onRemove(toast.id)
+      // Start exit animation
+      setIsLeaving(true)
+      // Remove after animation completes
+      setTimeout(() => {
+        onRemove(toast.id)
+      }, 200)
     }, 4000)
     return () => clearTimeout(timer)
   }, [toast.id, onRemove])
@@ -71,14 +78,18 @@ function ToastItem({ toast, onRemove }: { toast: Toast; onRemove: (id: string) =
   return (
     <div
       className={cn(
-        'flex items-center gap-3 px-4 py-3 rounded-lg border shadow-lg w-full max-w-md mx-auto animate-in slide-in-from-bottom',
+        'flex items-center gap-3 px-4 py-3 rounded-lg border shadow-lg w-full max-w-md mx-auto',
+        isLeaving ? 'slide-out-to-bottom' : 'toast-slide-in',
         bgColors[toast.type]
       )}
     >
       {icons[toast.type]}
       <p className="flex-1 text-sm text-gray-700 truncate">{toast.message}</p>
       <button
-        onClick={() => onRemove(toast.id)}
+        onClick={() => {
+          setIsLeaving(true)
+          setTimeout(() => onRemove(toast.id), 200)
+        }}
         className="p-1 hover:bg-black/5 rounded"
       >
         <X className="w-4 h-4 text-gray-400" />

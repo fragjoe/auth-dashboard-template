@@ -65,11 +65,6 @@ export function Combobox({
             placeholder={placeholder}
             disabled={disabled}
           />
-          {required && (
-            <span className="absolute right-10 top-1/2 -translate-y-1/2 text-red-500 text-sm">
-              *
-            </span>
-          )}
           {selectedOption ? (
             <button
               type="button"
