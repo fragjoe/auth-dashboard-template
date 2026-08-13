@@ -54,7 +54,7 @@ function RoomItem({ room, propertyId }: { room: Room; propertyId: string }) {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'available':
-        return { label: 'Kosong', color: 'bg-green-100 text-green-700' }
+        return { label: 'Kosong', color: 'bg-red-100 text-red-700' }
       case 'occupied':
         return { label: 'Terisi', color: 'bg-blue-100 text-blue-700' }
       case 'maintenance':
