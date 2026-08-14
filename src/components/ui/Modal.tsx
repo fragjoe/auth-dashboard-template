@@ -1,6 +1,6 @@
 import { useEffect, type ReactNode } from 'react'
 import { createPortal } from 'react-dom'
-import { X } from '@phosphor-icons/react'
+import { X } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 interface ModalProps {
@@ -71,14 +71,14 @@ function Modal({
       >
         {/* Header */}
         {(title || showCloseButton) && (
-          <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200">
-            {title && <h2 className="text-lg font-semibold text-gray-900">{title}</h2>}
+          <div className="flex items-center justify-between px-6 py-4 border-b border-border">
+            {title && <h2 className="text-lg font-semibold text-foreground">{title}</h2>}
             {showCloseButton && (
               <button
                 onClick={onClose}
-                className="p-1 text-gray-400 hover:text-gray-600 transition-colors rounded-lg hover:bg-gray-100"
+                className="p-1 text-muted-foreground hover:text-foreground transition-colors rounded-lg hover:bg-muted"
               >
-                <X weight="bold" className="w-5 h-5" />
+                <X className="w-5 h-5" />
               </button>
             )}
           </div>

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
-import { User, CalendarBlank, CreditCard, CircleNotch } from '@phosphor-icons/react'
+import { User, Calendar, CreditCard, Loader2 } from 'lucide-react'
 import { useProperties } from '@/hooks/useProperties'
 import { useRooms } from '@/hooks/useRooms'
 import { useCreateTenant } from '@/hooks/useTenants'
@@ -152,14 +152,14 @@ export function NewTenantPage() {
   const availableRooms = rooms?.filter((r) => r.status === 'available') || []
 
   return (
-    <div className="p-4 lg:p-6 max-w-2xl w-full content-fade-in">
+    <div className="p-4 lg:p-6 max-w-3xl w-full content-fade-in">
       {/* Header */}
       <div className="mb-8">
         <Button variant="ghost" onClick={() => navigate(-1)} className="mb-4">
           Kembali
         </Button>
-        <h1 className="text-2xl font-bold text-gray-900">Tambah Penyewa Baru</h1>
-        <p className="text-gray-600 mt-1">Lengkapi informasi penyewa</p>
+        <h1 className="text-2xl font-bold text-foreground">Tambah Penyewa Baru</h1>
+        <p className="text-muted-foreground mt-1">Lengkapi informasi penyewa</p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
@@ -167,14 +167,14 @@ export function NewTenantPage() {
         <div className="bg-white border rounded-lg p-6 space-y-6">
           <div className="flex items-center gap-3 mb-4">
             <div className="bg-primary-100 p-2 rounded-lg">
-              <User weight="bold" className="w-5 h-5 text-primary-600" />
+              <User className="w-5 h-5 text-primary-600" />
             </div>
             <h2 className="text-lg font-semibold">Informasi Penyewa</h2>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <label htmlFor="name" className="text-sm font-medium text-gray-700">
+              <label htmlFor="name" className="text-sm font-medium text-foreground">
                 Nama Lengkap
               </label>
               <Input
@@ -188,7 +188,7 @@ export function NewTenantPage() {
             </div>
 
             <div className="space-y-2">
-              <label htmlFor="phone" className="text-sm font-medium text-gray-700">
+              <label htmlFor="phone" className="text-sm font-medium text-foreground">
                 Nomor Telepon
               </label>
               <Input
@@ -204,7 +204,7 @@ export function NewTenantPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <label htmlFor="email" className="text-sm font-medium text-gray-700">
+              <label htmlFor="email" className="text-sm font-medium text-foreground">
                 Email
               </label>
               <Input
@@ -218,7 +218,7 @@ export function NewTenantPage() {
             </div>
 
             <div className="space-y-2">
-              <label htmlFor="id_card" className="text-sm font-medium text-gray-700">
+              <label htmlFor="id_card" className="text-sm font-medium text-foreground">
                 No. KTP / ID Card
               </label>
               <Input
@@ -232,7 +232,7 @@ export function NewTenantPage() {
           </div>
 
           <div className="space-y-2">
-            <label htmlFor="emergency_contact" className="text-sm font-medium text-gray-700">
+            <label htmlFor="emergency_contact" className="text-sm font-medium text-foreground">
               Kontak Darurat
             </label>
             <Input
@@ -248,14 +248,14 @@ export function NewTenantPage() {
         {/* Location */}
         <div className="bg-white border rounded-lg p-6 space-y-6">
           <div className="flex items-center gap-3 mb-4">
-            <div className="bg-blue-100 p-2 rounded-lg">
-              <CalendarBlank weight="bold" className="w-5 h-5 text-blue-600" />
+            <div className="bg-emerald-100 p-2 rounded-lg">
+              <Calendar className="w-5 h-5 text-emerald-600" />
             </div>
             <h2 className="text-lg font-semibold">Lokasi</h2>
           </div>
 
           <div className="space-y-2">
-            <label htmlFor="property_id" className="text-sm font-medium text-gray-700">
+            <label htmlFor="property_id" className="text-sm font-medium text-foreground">
               Properti
             </label>
             <Select value={formData.property_id} onValueChange={handlePropertyChange}>
@@ -275,7 +275,7 @@ export function NewTenantPage() {
           {/* Show room dropdown only for per_room type */}
           {isPerRoom && (
             <div className="space-y-2">
-              <label htmlFor="room_id" className="text-sm font-medium text-gray-700">
+              <label htmlFor="room_id" className="text-sm font-medium text-foreground">
                 Kamar
               </label>
               <Select value={formData.room_id} onValueChange={(value) => setFormData((prev) => ({ ...prev, room_id: value }))}>
@@ -295,8 +295,8 @@ export function NewTenantPage() {
 
           {/* Show info for per_property */}
           {selectedProperty && !isPerRoom && (
-            <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
-              <p className="text-blue-800 text-sm">
+            <div className="p-4 bg-emerald-50 border border-emerald-200 rounded-lg">
+              <p className="text-emerald-800 text-sm">
                 Properti ini disewakan secara <strong>per properti</strong>.
                 Satu properti untuk satu penyewa.
               </p>
@@ -308,7 +308,7 @@ export function NewTenantPage() {
         <div className="bg-white border rounded-lg p-6 space-y-6">
           <div className="flex items-center gap-3 mb-4">
             <div className="bg-purple-100 p-2 rounded-lg">
-              <CalendarBlank weight="bold" className="w-5 h-5 text-purple-600" />
+              <Calendar className="w-5 h-5 text-purple-600" />
             </div>
             <h2 className="text-lg font-semibold">Durasi Sewa</h2>
           </div>
@@ -331,7 +331,7 @@ export function NewTenantPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <label htmlFor="start_date" className="text-sm font-medium text-gray-700">
+              <label htmlFor="start_date" className="text-sm font-medium text-foreground">
                 Tanggal Masuk
               </label>
               <Input
@@ -344,7 +344,7 @@ export function NewTenantPage() {
               />
             </div>
             <div className="space-y-2">
-              <label htmlFor="start_time" className="text-sm font-medium text-gray-700">
+              <label htmlFor="start_time" className="text-sm font-medium text-foreground">
                 Jam Masuk
               </label>
               <Input
@@ -359,7 +359,7 @@ export function NewTenantPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <label htmlFor="end_date" className="text-sm font-medium text-gray-700">
+              <label htmlFor="end_date" className="text-sm font-medium text-foreground">
                 Tanggal Keluar
               </label>
               <Input
@@ -371,7 +371,7 @@ export function NewTenantPage() {
               />
             </div>
             <div className="space-y-2">
-              <label htmlFor="end_time" className="text-sm font-medium text-gray-700">
+              <label htmlFor="end_time" className="text-sm font-medium text-foreground">
                 Jam Keluar
               </label>
               <Input
@@ -385,7 +385,7 @@ export function NewTenantPage() {
           </div>
 
           <div className="space-y-2">
-            <label htmlFor="status" className="text-sm font-medium text-gray-700">
+            <label htmlFor="status" className="text-sm font-medium text-foreground">
               Status
             </label>
             <Select value={formData.status} onValueChange={(value) => setFormData((prev) => ({ ...prev, status: value as TenantStatus }))}>
@@ -403,14 +403,14 @@ export function NewTenantPage() {
         {/* Deposit */}
         <div className="bg-white border rounded-lg p-6 space-y-6">
           <div className="flex items-center gap-3 mb-4">
-            <div className="bg-green-100 p-2 rounded-lg">
-              <CreditCard weight="bold" className="w-5 h-5 text-green-600" />
+            <div className="bg-emerald-100 p-2 rounded-lg">
+              <CreditCard className="w-5 h-5 text-emerald-600" />
             </div>
             <h2 className="text-lg font-semibold">Pembayaran</h2>
           </div>
 
           <div className="space-y-2">
-            <label htmlFor="deposit" className="text-sm font-medium text-gray-700">
+            <label htmlFor="deposit" className="text-sm font-medium text-foreground">
               Deposit (Rp)
             </label>
             <Input
@@ -421,14 +421,14 @@ export function NewTenantPage() {
               onChange={handleChange}
               placeholder="0"
             />
-            <p className="text-sm text-gray-500">Jumlah deposit. Kosongkan jika tidak ada.</p>
+            <p className="text-sm text-muted-foreground">Jumlah deposit. Kosongkan jika tidak ada.</p>
           </div>
         </div>
 
         {/* Notes */}
         <div className="bg-white border rounded-lg p-6 space-y-6">
           <div className="space-y-2">
-            <label htmlFor="notes" className="text-sm font-medium text-gray-700">
+            <label htmlFor="notes" className="text-sm font-medium text-foreground">
               Catatan
             </label>
             <textarea
@@ -450,9 +450,9 @@ export function NewTenantPage() {
           </Button>
           <Button type="submit" disabled={isSubmitting}>
             {isSubmitting ? (
-              <CircleNotch className="w-4 h-4 mr-2 animate-spin" />
+              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
             ) : null}
-            {isSubmitting ? 'Memproses...' : 'Simpan Penyewa'}
+            {isSubmitting ? 'Memproses...' : 'Simpan'}
           </Button>
         </div>
       </form>

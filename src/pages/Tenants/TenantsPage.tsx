@@ -1,4 +1,4 @@
-import { Users, Phone, EnvelopeSimple, Calendar } from '@phosphor-icons/react'
+import { Users, Phone, Mail, Calendar } from 'lucide-react'
 import { useQueryClient } from '@tanstack/react-query'
 import { useTenants, tenantKeys } from '@/hooks/useTenants'
 import { Button } from '@/components/ui/Button'
@@ -15,7 +15,7 @@ export function TenantsPage() {
 
   return (
     <PullToRefresh onRefresh={handleRefresh} className="no-scrollbar">
-    <div className="p-4 lg:p-6 max-w-7xl content-fade-in">
+    <div className="p-4 lg:p-6 max-w-3xl content-fade-in">
       {/* Add Tenant Button */}
       <div className="flex justify-end mb-6">
         <Button disabled>
@@ -56,7 +56,7 @@ export function TenantsPage() {
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex items-center gap-3">
                     <div className="bg-primary-100 p-2 rounded-full">
-                      <Users weight="bold" className="w-4 h-4 text-primary-600" />
+                      <Users className="w-4 h-4 text-primary-600" />
                     </div>
                     <div>
                       <h3 className="font-semibold text-foreground">{tenant.name}</h3>
@@ -73,18 +73,18 @@ export function TenantsPage() {
                 <div className="space-y-2 text-sm">
                   {tenant.phone && (
                     <div className="flex items-center gap-2 text-muted-foreground">
-                      <Phone weight="bold" className="w-4 h-4" />
+                      <Phone className="w-4 h-4" />
                       <span>{tenant.phone}</span>
                     </div>
                   )}
                   {tenant.email && (
                     <div className="flex items-center gap-2 text-muted-foreground">
-                      <EnvelopeSimple weight="bold" className="w-4 h-4" />
+                      <Mail className="w-4 h-4" />
                       <span className="truncate">{tenant.email}</span>
                     </div>
                   )}
                   <div className="flex items-center gap-2 text-muted-foreground">
-                    <Calendar weight="bold" className="w-4 h-4" />
+                    <Calendar className="w-4 h-4" />
                     <span>
                       {formatDate(tenant.start_date)} - {tenant.end_date ? formatDate(tenant.end_date) : '-'}
                     </span>
@@ -105,7 +105,7 @@ export function TenantsPage() {
         </div>
       ) : (
         <div className="text-center py-12 rounded-lg border border-dashed content-fade-in">
-          <Users weight="bold" className="w-12 h-12 text-muted-foreground/50 mx-auto mb-4" />
+          <Users className="w-12 h-12 text-muted-foreground/50 mx-auto mb-4" />
           <h3 className="text-lg font-medium text-foreground mb-2">Belum ada penyewa</h3>
           <p className="text-muted-foreground">
             Tambahkan penyewa dari halaman detail properti

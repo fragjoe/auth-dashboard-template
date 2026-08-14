@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { ArrowRight, Buildings, MapPin, Check, CircleNotch, WarningCircle } from '@phosphor-icons/react'
+import { ArrowRight, Building2, MapPin, Check, Loader2 } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { Combobox } from '@/components/ui/Combobox'
@@ -124,13 +124,17 @@ export function NewPropertyPage() {
 
   const handleNext = () => {
     if (step === 1) {
-      if (validateStep1()) {
-        setStep(2)
+      if (!validateStep1()) {
+        toast('Mohon lengkapi field yang wajib diisi', 'error')
+        return
       }
+      setStep(2)
     } else if (step === 2) {
-      if (validateStep2()) {
-        setStep(3)
+      if (!validateStep2()) {
+        toast('Jenis sewa wajib dipilih', 'error')
+        return
       }
+      setStep(3)
     }
   }
 
@@ -167,13 +171,7 @@ export function NewPropertyPage() {
     const step2Valid = validateStep2()
     const step3Valid = validateStep3()
     if (!step1Valid || !step2Valid || !step3Valid) {
-      if (step === 1) {
-        window.scrollTo({ top: 0, behavior: 'smooth' })
-      } else if (step === 2) {
-        setStep(2)
-      } else if (step === 3) {
-        setStep(3)
-      }
+      toast('Mohon lengkapi field yang wajib diisi', 'error')
       return
     }
 
@@ -210,37 +208,8 @@ export function NewPropertyPage() {
     }
   }
 
-  const showStepError = (stepNum: number) => {
-    if (step !== stepNum) return null
-    if (stepNum === 1 && Object.keys(errors).length > 0) {
-      return (
-        <div className="flex items-center gap-2 p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm mb-4">
-          <WarningCircle weight="fill" className="w-5 h-5 flex-shrink-0" />
-          <span>Mohon lengkapi field yang wajib diisi:</span>
-        </div>
-      )
-    }
-    if (stepNum === 2 && errors.rental_type) {
-      return (
-        <div className="flex items-center gap-2 p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm mb-4">
-          <WarningCircle weight="fill" className="w-5 h-5 flex-shrink-0" />
-          <span>{errors.rental_type}</span>
-        </div>
-      )
-    }
-    if (stepNum === 3 && Object.keys(errors).length > 0) {
-      return (
-        <div className="flex items-center gap-2 p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm mb-4">
-          <WarningCircle weight="fill" className="w-5 h-5 flex-shrink-0" />
-          <span>Mohon lengkapi field lokasi yang wajib diisi</span>
-        </div>
-      )
-    }
-    return null
-  }
-
   return (
-    <div className="p-4 lg:p-6 max-w-2xl w-full content-fade-in">
+    <div className="p-4 lg:p-6 max-w-3xl w-full content-fade-in">
       {/* Progress Steps */}
       <div className="flex items-center justify-center mb-8">
         {[
@@ -258,7 +227,7 @@ export function NewPropertyPage() {
                     : 'bg-muted text-muted-foreground'
                 }`}
               >
-                {step > s.num ? <Check weight="bold" className="w-4 h-4" /> : s.num}
+                {step > s.num ? <Check className="w-4 h-4" /> : s.num}
               </div>
               <span className={`mt-1 text-xs font-medium whitespace-nowrap ${step >= s.num ? 'text-foreground' : 'text-muted-foreground'}`}>
                 {s.label}
@@ -280,11 +249,9 @@ export function NewPropertyPage() {
       {/* Step 1: Basic Info */}
       {step === 1 && (
         <div className="bg-white border rounded-lg p-6 space-y-6">
-          {showStepError(1)}
-
           <div className="flex items-center gap-3 mb-4">
             <div className="bg-primary-100 p-2 rounded-lg">
-              <Buildings weight="bold" className="w-5 h-5 text-primary-600" />
+              <Building2 className="w-5 h-5 text-primary-600" />
             </div>
             <div>
               <h2 className="text-lg font-semibold">Informasi Properti</h2>
@@ -292,7 +259,7 @@ export function NewPropertyPage() {
           </div>
 
           <div className="space-y-2">
-            <label htmlFor="name" className="text-sm font-medium text-gray-700">
+            <label htmlFor="name" className="text-sm font-medium text-foreground">
               Nama Properti <span className="text-red-500">*</span>
             </label>
             <Input
@@ -309,7 +276,7 @@ export function NewPropertyPage() {
           </div>
 
           <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-700">
+            <label className="text-sm font-medium text-foreground">
               Tipe Properti <span className="text-red-500">*</span>
             </label>
             <Combobox
@@ -322,8 +289,8 @@ export function NewPropertyPage() {
           </div>
 
           <div className="space-y-2">
-            <label htmlFor="description" className="text-sm font-medium text-gray-700">
-              Deskripsi
+            <label htmlFor="description" className="text-sm font-medium text-foreground">
+              Deskripsi <span className="text-xs bg-muted px-1.5 py-0.5 rounded text-muted-foreground">Opsional</span>
             </label>
             <textarea
               id="description"
@@ -341,11 +308,9 @@ export function NewPropertyPage() {
       {/* Step 2: Rental Type */}
       {step === 2 && (
         <div className="bg-white border rounded-lg p-6 space-y-6">
-          {showStepError(2)}
-
           <div className="flex items-center gap-3 mb-4">
             <div className="bg-primary-100 p-2 rounded-lg">
-              <Buildings weight="bold" className="w-5 h-5 text-primary-600" />
+              <Building2 className="w-5 h-5 text-primary-600" />
             </div>
             <div>
               <h2 className="text-lg font-semibold">Jenis Sewa</h2>
@@ -415,17 +380,17 @@ export function NewPropertyPage() {
         <div className="bg-white border rounded-lg p-6 space-y-6">
           <div className="flex items-center gap-3 mb-4">
             <div className="bg-primary-100 p-2 rounded-lg">
-              <MapPin weight="bold" className="w-5 h-5 text-primary-600" />
+              <MapPin className="w-5 h-5 text-primary-600" />
             </div>
             <h2 className="text-lg font-semibold">Lokasi & Kontak</h2>
           </div>
 
           {/* Image Upload - Dummy */}
           <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-700">
+            <label className="text-sm font-medium text-foreground">
               Foto Properti
             </label>
-            <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 flex flex-col items-center justify-center text-center">
+            <div className="border-2 border-dashed border-border rounded-lg p-8 flex flex-col items-center justify-center text-center">
               <div className="w-12 h-12 bg-muted rounded-full flex items-center justify-center mb-3">
                 <svg className="w-6 h-6 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -437,7 +402,7 @@ export function NewPropertyPage() {
           </div>
 
           <div className="space-y-2">
-            <label htmlFor="address" className="text-sm font-medium text-gray-700">
+            <label htmlFor="address" className="text-sm font-medium text-foreground">
               Alamat <span className="text-red-500">*</span>
             </label>
             <Input
@@ -454,10 +419,7 @@ export function NewPropertyPage() {
           </div>
 
           {/* Region Select - Searchable */}
-          <div className="space-y-1">
-            <label className="text-sm font-medium text-gray-700">
-              Wilayah Indonesia <span className="text-red-500">*</span>
-            </label>
+          <div className="space-y-0">
             <RegionSelect
               onProvinceChange={handleRegionChange.province}
               onRegencyChange={handleRegionChange.city}
@@ -474,7 +436,7 @@ export function NewPropertyPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <label htmlFor="postal_code" className="text-sm font-medium text-gray-700 flex items-center gap-2">
+              <label htmlFor="postal_code" className="text-sm font-medium text-foreground flex items-center gap-2">
                 Kode Pos <span className="text-xs bg-muted px-1.5 py-0.5 rounded text-muted-foreground">Opsional</span>
               </label>
               <Input
@@ -487,7 +449,7 @@ export function NewPropertyPage() {
             </div>
 
             <div className="space-y-2">
-              <label htmlFor="phone" className="text-sm font-medium text-gray-700 flex items-center gap-2">
+              <label htmlFor="phone" className="text-sm font-medium text-foreground flex items-center gap-2">
                 Nomor Telepon <span className="text-xs bg-muted px-1.5 py-0.5 rounded text-muted-foreground">Opsional</span>
               </label>
               <Input
@@ -516,14 +478,14 @@ export function NewPropertyPage() {
         {step < 3 ? (
           <Button onClick={handleNext}>
             Lanjut
-            <ArrowRight weight="bold" className="w-5 h-5 ml-2" />
+            <ArrowRight className="w-5 h-5 ml-2" />
           </Button>
         ) : (
           <Button onClick={handleSubmit} disabled={isSubmitting}>
             {isSubmitting ? (
-              <CircleNotch className="w-4 h-4 mr-2 animate-spin" />
+              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
             ) : null}
-            {isSubmitting ? 'Memproses...' : 'Simpan Properti'}
+            {isSubmitting ? 'Memproses...' : 'Simpan'}
           </Button>
         )}
       </div>

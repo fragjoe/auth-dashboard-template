@@ -4,68 +4,68 @@
 
 @layer base {
   :root {
-    /* Background & Foreground */
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* Background & Foreground - Light Emerald tint */
+    --background: 152 42% 96%;       /* Emerald-50 - subtle green tint */
+    --foreground: 24 10% 10%;       /* Stone-900 */
 
     /* Card */
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 24 10% 10%;
 
     /* Popover */
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover-foreground: 24 10% 10%;
 
-    /* Primary - Green theme untuk properti */
-    --primary: 142 71% 45%;
+    /* Primary - Emerald bold */
+    --primary: 160 84% 32%;         /* Emerald-600 */
     --primary-foreground: 0 0% 100%;
 
-    /* Secondary */
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    /* Secondary - Emerald tint */
+    --secondary: 152 30% 92%;       /* Emerald-100 */
+    --secondary-foreground: 160 84% 20%; /* Emerald-800 */
 
-    /* Muted */
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    /* Muted - Soft emerald */
+    --muted: 152 30% 92%;          /* Emerald-100 */
+    --muted-foreground: 24 6% 46%;  /* Stone-500 */
 
-    /* Accent */
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    /* Accent - Emerald */
+    --accent: 160 60% 92%;          /* Emerald-100 */
+    --accent-foreground: 160 84% 20%; /* Emerald-800 */
 
-    /* Destructive - Red untuk delete/warning */
-    --destructive: 0 84.2% 59.8%;
+    /* Destructive - Red */
+    --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    /* Border & Input */
-    --border: 214.3 32.4% 91.7%;
-    --input: 214.3 32.4% 91.7%;
-    --ring: 142 71% 45%;
+    /* Border & Input - Stone */
+    --border: 30 6% 87%;            /* Stone-200 */
+    --input: 30 6% 87%;             /* Stone-200 */
+    --ring: 160 84% 32%;            /* Emerald-600 */
 
     /* Border Radius */
     --radius: 0.5rem;
   }
 
   .dark {
-    /* Dark mode - bisa diaktifkan nanti */
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 142 71% 45%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-    --destructive: 0 62.8% 30.2%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 142 71% 45%;
+    /* Dark mode - Deep emerald accent */
+    --background: 160 50% 7%;         /* Deep emerald-black */
+    --foreground: 152 30% 92%;
+    --card: 160 50% 9%;
+    --card-foreground: 152 30% 92%;
+    --popover: 160 50% 9%;
+    --popover-foreground: 152 30% 92%;
+    --primary: 160 84% 45%;          /* Emerald-500 */
+    --primary-foreground: 160 50% 7%;
+    --secondary: 160 50% 12%;
+    --secondary-foreground: 152 30% 85%;
+    --muted: 160 50% 12%;
+    --muted-foreground: 152 20% 55%;
+    --accent: 160 50% 12%;
+    --accent-foreground: 160 84% 65%;
+    --destructive: 0 62% 50%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 160 40% 18%;
+    --input: 160 40% 18%;
+    --ring: 160 84% 45%;
   }
 }
 
@@ -96,12 +96,12 @@
 }
 
 /* ========================================
-   UTILITY CLASSES - Status Colors
+   UTILITY CLASSES - Status Colors (Emerald)
    ======================================== */
 
 /* Success - untuk status aktif/berhasil */
-.success { background-color: hsl(142 76% 90%); color: hsl(142 77% 27%); }
-.success-bg { background-color: hsl(142 76% 90%); }
+.success { background-color: hsl(160 84% 92%); color: hsl(160 84% 20%); }
+.success-bg { background-color: hsl(160 84% 92%); }
 
 /* Warning - untuk status menunggu/perhatian */
 .warning { background-color: hsl(48 96% 89%); color: hsl(40 92% 33%); }

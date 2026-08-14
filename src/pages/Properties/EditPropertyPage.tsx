@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { Buildings, MapPin, FloppyDisk, CircleNotch } from '@phosphor-icons/react'
+import { Building2, MapPin, Save, Loader2 } from 'lucide-react'
 import { useProperty, useUpdateProperty } from '@/hooks/useProperties'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
@@ -138,7 +138,7 @@ export function EditPropertyPage() {
 
   if (isLoading) {
     return (
-      <div className="p-4 lg:p-6 max-w-2xl w-full">
+      <div className="p-4 lg:p-6 max-w-3xl w-full">
         <FormSkeleton />
       </div>
     )
@@ -162,13 +162,13 @@ export function EditPropertyPage() {
         <div className="bg-white border rounded-lg p-6 space-y-6">
           <div className="flex items-center gap-3 mb-4">
             <div className="bg-primary-100 p-2 rounded-lg">
-              <Buildings weight="bold" className="w-5 h-5 text-primary-600" />
+              <Building2 className="w-5 h-5 text-primary-600" />
             </div>
             <h2 className="text-lg font-semibold">Informasi Properti</h2>
           </div>
 
           <div className="space-y-2">
-            <label htmlFor="name" className="text-sm font-medium text-gray-700">
+            <label htmlFor="name" className="text-sm font-medium text-foreground">
               Nama Properti
             </label>
             <Input
@@ -183,7 +183,7 @@ export function EditPropertyPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <label htmlFor="type" className="text-sm font-medium text-gray-700">
+              <label htmlFor="type" className="text-sm font-medium text-foreground">
                 Tipe Properti
               </label>
               <Select
@@ -205,7 +205,7 @@ export function EditPropertyPage() {
             </div>
 
             <div className="space-y-2">
-              <label htmlFor="rental_type" className="text-sm font-medium text-gray-700">
+              <label htmlFor="rental_type" className="text-sm font-medium text-foreground">
                 Jenis Sewa
               </label>
               <Select
@@ -228,7 +228,7 @@ export function EditPropertyPage() {
           </div>
 
           <div className="space-y-2">
-            <label htmlFor="description" className="text-sm font-medium text-gray-700">
+            <label htmlFor="description" className="text-sm font-medium text-foreground">
               Deskripsi
             </label>
             <textarea
@@ -252,7 +252,7 @@ export function EditPropertyPage() {
               onChange={handleChange}
               className="w-5 h-5 text-primary rounded border-input focus:ring-primary"
             />
-            <label htmlFor="status" className="text-sm font-medium text-gray-700">
+            <label htmlFor="status" className="text-sm font-medium text-foreground">
               Properti Aktif
             </label>
           </div>
@@ -262,13 +262,13 @@ export function EditPropertyPage() {
         <div className="bg-white border rounded-lg p-6 space-y-6">
           <div className="flex items-center gap-3 mb-4">
             <div className="bg-primary-100 p-2 rounded-lg">
-              <MapPin weight="bold" className="w-5 h-5 text-primary-600" />
+              <MapPin className="w-5 h-5 text-primary-600" />
             </div>
             <h2 className="text-lg font-semibold">Lokasi & Kontak</h2>
           </div>
 
           <div className="space-y-2">
-            <label htmlFor="address" className="text-sm font-medium text-gray-700">
+            <label htmlFor="address" className="text-sm font-medium text-foreground">
               Alamat
             </label>
             <Input
@@ -295,7 +295,7 @@ export function EditPropertyPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <label htmlFor="postal_code" className="text-sm font-medium text-gray-700">
+              <label htmlFor="postal_code" className="text-sm font-medium text-foreground">
                 Kode Pos
               </label>
               <Input
@@ -308,7 +308,7 @@ export function EditPropertyPage() {
             </div>
 
             <div className="space-y-2">
-              <label htmlFor="phone" className="text-sm font-medium text-gray-700">
+              <label htmlFor="phone" className="text-sm font-medium text-foreground">
                 Nomor Telepon
               </label>
               <Input
@@ -334,11 +334,11 @@ export function EditPropertyPage() {
           </Button>
           <Button type="submit" disabled={isSubmitting}>
             {isSubmitting ? (
-              <CircleNotch className="w-4 h-4 mr-2 animate-spin" />
+              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
             ) : (
-              <FloppyDisk weight="bold" className="w-4 h-4 mr-2" />
+              <Save className="w-4 h-4 mr-2" />
             )}
-            {isSubmitting ? 'Memproses...' : 'Simpan Perubahan'}
+            {isSubmitting ? 'Memproses...' : 'Simpan'}
           </Button>
         </div>
       </form>

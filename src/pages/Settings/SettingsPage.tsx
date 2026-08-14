@@ -1,4 +1,4 @@
-import { User, Database, SignOut } from '@phosphor-icons/react'
+import { User, Database, LogOut } from 'lucide-react'
 import { useAuth } from '@/hooks/useAuth'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
@@ -28,7 +28,7 @@ export function SettingsPage() {
         <div className="bg-white border rounded-lg p-6">
           <div className="flex items-center gap-3 mb-6">
             <div className="bg-primary-100 p-2 rounded-lg">
-              <User weight="bold" className="w-5 h-5 text-primary-600" />
+              <User className="w-5 h-5 text-primary-600" />
             </div>
             <div>
               <h2 className="font-semibold text-foreground">Profil</h2>
@@ -37,7 +37,7 @@ export function SettingsPage() {
           </div>
           <div className="space-y-4">
             <div className="space-y-2">
-              <label htmlFor="email" className="text-sm font-medium text-gray-700">
+              <label htmlFor="email" className="text-sm font-medium text-foreground">
                 Email
               </label>
               <Input
@@ -48,7 +48,7 @@ export function SettingsPage() {
               />
             </div>
             <div className="space-y-2">
-              <label htmlFor="name" className="text-sm font-medium text-gray-700">
+              <label htmlFor="name" className="text-sm font-medium text-foreground">
                 Nama
               </label>
               <Input
@@ -60,7 +60,7 @@ export function SettingsPage() {
               />
             </div>
             <div className="flex justify-end">
-              <Button>Simpan Perubahan</Button>
+              <Button>Simpan</Button>
             </div>
           </div>
         </div>
@@ -68,8 +68,8 @@ export function SettingsPage() {
         {/* Database Info */}
         <div className="bg-white border rounded-lg p-6">
           <div className="flex items-center gap-3 mb-6">
-            <div className="bg-blue-100 p-2 rounded-lg">
-              <Database weight="bold" className="w-5 h-5 text-blue-600" />
+            <div className="bg-emerald-100 p-2 rounded-lg">
+              <Database className="w-5 h-5 text-emerald-600" />
             </div>
             <div>
               <h2 className="font-semibold text-foreground">Database</h2>
@@ -79,7 +79,7 @@ export function SettingsPage() {
           <div className="space-y-3 text-sm">
             <div className="flex justify-between">
               <span className="text-muted-foreground">Status:</span>
-              <span className="text-green-600 font-medium">Terhubung</span>
+              <span className="text-emerald-600 font-medium">Terhubung</span>
             </div>
             <div className="flex justify-between">
               <span className="text-muted-foreground">URL:</span>
@@ -96,7 +96,7 @@ export function SettingsPage() {
           onClick={handleSignOut}
           className="w-full"
         >
-          <SignOut weight="bold" className="w-5 h-5 mr-2" />
+          <LogOut className="w-5 h-5 mr-2" />
           Keluar
         </Button>
 

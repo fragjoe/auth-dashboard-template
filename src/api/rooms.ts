@@ -17,6 +17,22 @@ export async function getRooms(propertyId: string): Promise<ApiResponse<Room[]>>
   }
 }
 
+// Get single room by ID only
+export async function getRoomById(roomId: string): Promise<ApiResponse<Room>> {
+  try {
+    const { data, error } = await supabase
+      .from('rooms')
+      .select('*')
+      .eq('id', roomId)
+      .single()
+
+    if (error) throw new Error(error.message)
+    return { data, status: 200 }
+  } catch (error) {
+    return { error: (error as Error).message, status: 500 }
+  }
+}
+
 // Get single room
 export async function getRoom(propertyId: string, roomId: string): Promise<ApiResponse<Room>> {
   try {

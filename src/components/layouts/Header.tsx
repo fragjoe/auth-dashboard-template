@@ -1,9 +1,12 @@
 import { useState, useRef, useEffect } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
-import { Bell, ArrowLeft, DotsThreeVertical, PencilSimple, Copy, Trash } from '@phosphor-icons/react'
+import { Bell, ArrowLeft, MoreVertical, Pencil, Copy, Trash2 } from 'lucide-react'
 import { useProperty, useDeleteProperty } from '@/hooks/useProperties'
-import { useRoom } from '@/hooks/useRooms'
+import { useRoomById } from '@/hooks/useRooms'
+import { useAuth } from '@/hooks/useAuth'
 import { useToast } from '@/components/ui/Toast'
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/Avatar'
+import { Skeleton } from '@/components/ui/Skeleton'
 import {
   AlertDialog,
   AlertDialogContent,
@@ -29,28 +32,27 @@ export function Header() {
   const menuRef = useRef<HTMLDivElement>(null)
   const deleteProperty = useDeleteProperty()
   const { toast } = useToast()
+  const { user, isLoading } = useAuth()
 
   const path = location.pathname
 
-  // Check if this is a property detail page (exclude /properties/new)
+  // Check if this is a property detail page
   const isPropertyDetail = () => {
-    const isNewProperty = path === '/properties/new'
-    return !isNewProperty && path.match(/^\/properties\/[^/]+$/) && !path.endsWith('/edit') && !path.includes('/rooms/')
+    return path.match(/^\/properties\/[^/]+$/) && !path.endsWith('/edit')
   }
 
-  // Check if this is a room detail page
+  // Check if this is a room detail page (flat URL /rooms/[id])
   const isRoomDetail = () => {
-    return path.match(/^\/properties\/[^/]+\/rooms\/[^/]+$/)
+    return path.match(/^\/rooms\/[^/]+$/)
   }
 
-  // Get property and room data
+  // Get property data
   const propertyId = isPropertyDetail() ? path.split('/').pop() : null
   const { data: property } = useProperty(propertyId || '')
 
-  const roomPathMatch = path.match(/^\/properties\/([^/]+)\/rooms\/([^/]+)$/)
-  const roomPropertyId = roomPathMatch ? roomPathMatch[1] : null
-  const roomId = roomPathMatch ? roomPathMatch[2] : null
-  const { data: room } = useRoom(roomPropertyId || '', roomId || '')
+  // Get room data
+  const roomId = isRoomDetail() ? path.split('/').pop() : null
+  const { data: room } = useRoomById(roomId || '')
 
   // Determine page title based on route
   const getPageTitle = () => {
@@ -69,6 +71,36 @@ export function Header() {
 
     const currentPage = navigation.find(item => path.startsWith(item.href))
     return currentPage?.title || currentPage?.name || 'Dashboard'
+  }
+
+  // Check if this is a main page (show Hi greeting with avatar)
+  const isMainPage = () => {
+    return (
+      path === '/properties' ||
+      path === '/tenants' ||
+      path === '/calendar' ||
+      path === '/'
+    )
+  }
+
+  // Get first name from user metadata
+  const getFirstName = () => {
+    if (!user) return 'User'
+    const fullName = user.user_metadata?.full_name || user.user_metadata?.name || user.email || 'User'
+    return fullName.split(' ')[0]
+  }
+
+  // Get avatar URL from user metadata
+  const getAvatarUrl = () => {
+    if (!user) return ''
+    return user.user_metadata?.avatar_url || user.user_metadata?.picture || ''
+  }
+
+  // Get initials for avatar fallback
+  const getInitials = () => {
+    if (!user) return 'U'
+    const fullName = user.user_metadata?.full_name || user.user_metadata?.name || user.email || 'U'
+    return fullName.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)
   }
 
   // Check if back button is needed
@@ -96,23 +128,14 @@ export function Header() {
   const pageTitle = getPageTitle()
   const showBack = needsBackButton()
   const showPropertyMenu = isPropertyDetail()
-
-  // Check if on main pages (show bell)
-  const isMainPage = () => {
-    return (
-      path === '/properties' ||
-      path === '/tenants' ||
-      path === '/settings'
-    )
-  }
+  const showGreeting = isMainPage()
+  const firstName = getFirstName()
+  const avatarUrl = getAvatarUrl()
+  const initials = getInitials()
 
   const handleEdit = () => {
     setShowMenu(false)
     if (propertyId) navigate(`/properties/${propertyId}/edit`)
-  }
-
-  const handleDuplicate = () => {
-    // Fitur duplikat belum tersedia
   }
 
   const handleDelete = () => {
@@ -136,19 +159,36 @@ export function Header() {
 
   return (
     <>
-      <header className="fixed top-0 left-0 right-0 z-40 bg-white border-b border-border">
-        <div className="flex items-center justify-between h-16 px-4">
+      <header className="fixed top-0 left-0 right-0 z-40 bg-primary border-b border-white/10">
+        <div className="lg:pl-64 flex items-center justify-between h-16 px-4">
           {/* Left: Back button (if needed) + Title */}
           <div className="flex items-center gap-3">
             {showBack && (
               <button
                 onClick={() => navigate(-1)}
-                className="p-2 -ml-2 rounded-lg hover:bg-muted transition-colors"
+                className="p-2 -ml-2 rounded-lg hover:bg-white/10 transition-colors"
               >
-                <ArrowLeft weight="bold" className="w-5 h-5 text-foreground" />
+                <ArrowLeft className="w-5 h-5 text-white" />
               </button>
             )}
-            <h1 className="text-lg font-semibold text-foreground truncate">{pageTitle}</h1>
+            {showGreeting ? (
+              isLoading ? (
+                <div className="flex items-center gap-3">
+                  <Skeleton className="w-8 h-8 rounded-full" />
+                  <Skeleton className="h-5 w-24 rounded" />
+                </div>
+              ) : (
+                <div className="flex items-center gap-3">
+                  <Avatar size="sm">
+                    <AvatarImage src={avatarUrl} alt={firstName} />
+                    <AvatarFallback className="bg-white/20 text-white">{initials}</AvatarFallback>
+                  </Avatar>
+                  <h1 className="text-lg font-semibold text-white">Hi, {firstName}</h1>
+                </div>
+              )
+            ) : (
+              <h1 className="text-lg font-semibold text-white truncate">{pageTitle}</h1>
+            )}
           </div>
 
           {/* Right: Menu or Bell */}
@@ -156,29 +196,28 @@ export function Header() {
             {showPropertyMenu ? (
               <>
                 <button
-                  onClick={() => setShowMenu(!showMenu)}
-                  className="p-2 rounded-lg hover:bg-muted transition-colors"
+                onClick={() => setShowMenu(!showMenu)}
+                  className="p-2 rounded-lg hover:bg-white/10 transition-colors"
                 >
-                  <DotsThreeVertical weight="bold" className="w-5 h-5 text-foreground" />
+                  <MoreVertical className="w-5 h-5 text-white" />
                 </button>
 
                 {/* Dropdown Menu */}
                 {showMenu && (
-                  <div className="absolute right-0 mt-2 w-48 bg-background rounded-lg shadow-lg border border-border py-1 z-50">
+                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl border border-border py-1 z-50">
                     <button
                       onClick={handleEdit}
                       className="flex items-center w-full px-4 py-2 text-left text-sm text-foreground hover:bg-muted transition-colors"
                     >
-                      <PencilSimple weight="bold" className="w-4 h-4 mr-3 text-muted-foreground" />
-                      Edit Properti
+                      <Pencil className="w-4 h-4 mr-3 text-muted-foreground" />
+                      Edit
                     </button>
                     <button
-                      onClick={handleDuplicate}
                       disabled
                       className="flex items-center w-full px-4 py-2 text-left text-sm text-muted-foreground cursor-not-allowed opacity-50"
                     >
-                      <Copy weight="bold" className="w-4 h-4 mr-3" />
-                      Duplikat Properti
+                      <Copy className="w-4 h-4 mr-3" />
+                      Duplikasi
                       <span className="ml-auto text-xs bg-muted px-1.5 py-0.5 rounded">Segera</span>
                     </button>
                     <hr className="my-1 border-border" />
@@ -186,17 +225,18 @@ export function Header() {
                       onClick={handleDelete}
                       className="flex items-center w-full px-4 py-2 text-left text-sm text-destructive hover:bg-destructive/10 transition-colors"
                     >
-                      <Trash weight="bold" className="w-4 h-4 mr-3" />
-                      Hapus Properti
+                      <Trash2 className="w-4 h-4 mr-3" />
+                      Hapus
                     </button>
                   </div>
                 )}
               </>
-            ) : isMainPage() ? (
-              <button className="p-2 -mr-2 rounded-lg hover:bg-muted relative">
-                <Bell weight="bold" className="w-5 h-5 text-foreground" />
+            ) : isRoomDetail() ? null : (
+              <button className="p-2 -mr-2 rounded-lg hover:bg-white/10 relative">
+                <Bell className="w-5 h-5 text-white fill-white" />
+                <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full ring-2 ring-white animate-pulse" />
               </button>
-            ) : null}
+            )}
           </div>
         </div>
       </header>

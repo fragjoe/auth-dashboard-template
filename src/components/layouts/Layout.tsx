@@ -1,16 +1,16 @@
 import { type ReactNode } from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import { Buildings, CalendarBlank, User, Gear, SignOut } from '@phosphor-icons/react'
+import { Building2, Calendar, User, Settings, LogOut } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { signOut } from '@/api/auth'
 import { Header } from './Header'
 import { BottomNav } from './BottomNav'
 
 const navigation = [
-  { name: 'Daftar Properti', href: '/properties', icon: Buildings },
-  { name: 'Kalender', href: '/calendar', icon: CalendarBlank, disabled: true },
+  { name: 'Daftar Properti', href: '/properties', icon: Building2 },
+  { name: 'Kalender', href: '/calendar', icon: Calendar, disabled: true },
   { name: 'Penyewa', href: '/tenants', icon: User },
-  { name: 'Pengaturan', href: '/settings', icon: Gear },
+  { name: 'Pengaturan', href: '/settings', icon: Settings },
 ]
 
 export function Layout({ children }: { children: ReactNode }) {
@@ -22,13 +22,13 @@ export function Layout({ children }: { children: ReactNode }) {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 overflow-x-hidden">
+    <div className="min-h-screen bg-background overflow-x-hidden">
       {/* Desktop Sidebar */}
-      <aside className="hidden lg:flex lg:flex-col lg:fixed lg:inset-y-0 lg:w-64 lg:bg-white lg:shadow-lg">
-        <div className="h-16 flex items-center px-6 border-b border-gray-200">
+      <aside className="hidden lg:flex lg:flex-col lg:fixed lg:inset-y-0 lg:w-64 lg:bg-primary lg:shadow-xl">
+        <div className="h-16 flex items-center px-6 border-b border-primary-foreground/20">
           <Link to="/dashboard" className="flex items-center gap-3">
-            <Buildings weight="bold" className="w-8 h-8 text-primary-600" />
-            <span className="text-xl font-bold text-gray-900">PropManager</span>
+            <Building2 className="w-8 h-8 text-white" />
+            <span className="text-xl font-bold text-white">PropManager</span>
           </Link>
         </div>
 
@@ -39,9 +39,9 @@ export function Layout({ children }: { children: ReactNode }) {
               return (
                 <div
                   key={item.name}
-                  className="flex items-center px-3 py-2.5 mb-1 rounded-lg text-gray-400 cursor-not-allowed"
+                  className="flex items-center px-3 py-2.5 mb-1 rounded-lg text-white/60 cursor-not-allowed"
                 >
-                  <item.icon weight="regular" className="w-5 h-5 mr-3" />
+                  <item.icon className="w-5 h-5 mr-3" />
                   {item.name}
                 </div>
               )
@@ -51,25 +51,25 @@ export function Layout({ children }: { children: ReactNode }) {
                 key={item.name}
                 to={item.href}
                 className={cn(
-                  'flex items-center px-3 py-2.5 mb-1 rounded-lg transition-colors',
+                  'flex items-center px-3 py-2.5 mb-1 rounded-lg transition-all duration-200',
                   isActive
-                    ? 'bg-primary-50 text-primary-600 font-medium'
-                    : 'text-gray-600 hover:bg-gray-50'
+                    ? 'bg-white text-primary font-semibold shadow-md'
+                    : 'text-white hover:bg-primary-foreground/10'
                 )}
               >
-                <item.icon weight={isActive ? 'bold' : 'regular'} className="w-5 h-5 mr-3" />
+                <item.icon className="w-5 h-5 mr-3" />
                 {item.name}
               </Link>
             )
           })}
         </nav>
 
-        <div className="p-4 border-t border-gray-200">
+        <div className="p-4 border-t border-primary-foreground/20">
           <button
             onClick={handleSignOut}
-            className="flex items-center w-full px-3 py-2.5 text-gray-600 hover:bg-gray-50 rounded-lg transition-colors"
+            className="flex items-center w-full px-3 py-2.5 text-white/80 hover:bg-white/10 rounded-lg transition-colors"
           >
-            <SignOut weight="bold" className="w-5 h-5 mr-3" />
+            <LogOut className="w-5 h-5 mr-3" />
             Keluar
           </button>
         </div>
@@ -77,13 +77,11 @@ export function Layout({ children }: { children: ReactNode }) {
 
       {/* Main Content Container */}
       <div className="lg:ml-64 flex flex-col min-h-screen w-full">
-        <div className="pt-16 lg:pt-0">
-          <Header />
-          <main className="flex-1 pb-[120px] lg:pb-6 w-full overflow-y-auto no-scrollbar">
-            {children}
-          </main>
-          <BottomNav />
-        </div>
+        <Header />
+        <main className="pt-16 flex-1 pb-[120px] lg:pt-16 lg:pb-6 w-full overflow-y-auto no-scrollbar">
+          {children}
+        </main>
+        <BottomNav />
       </div>
     </div>
   )

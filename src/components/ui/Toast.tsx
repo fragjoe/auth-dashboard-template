@@ -64,15 +64,15 @@ function ToastItem({ toast, onRemove }: { toast: Toast; onRemove: (id: string) =
   }, [toast.id, onRemove])
 
   const icons = {
-    success: <CheckCircle className="w-5 h-5 text-green-500" />,
+    success: <CheckCircle className="w-5 h-5 text-emerald-600" />,
     error: <XCircle className="w-5 h-5 text-red-500" />,
-    info: <Info className="w-5 h-5 text-blue-500" />,
+    info: <Info className="w-5 h-5 text-emerald-600" />,
   }
 
   const bgColors = {
-    success: 'bg-green-50 border-green-200',
+    success: 'bg-emerald-50 border-emerald-200',
     error: 'bg-red-50 border-red-200',
-    info: 'bg-blue-50 border-blue-200',
+    info: 'bg-emerald-50 border-emerald-200',
   }
 
   return (
@@ -84,7 +84,7 @@ function ToastItem({ toast, onRemove }: { toast: Toast; onRemove: (id: string) =
       )}
     >
       {icons[toast.type]}
-      <p className="flex-1 text-sm text-gray-700 truncate">{toast.message}</p>
+      <p className="flex-1 text-sm text-foreground truncate">{toast.message}</p>
       <button
         onClick={() => {
           setIsLeaving(true)
@@ -92,7 +92,7 @@ function ToastItem({ toast, onRemove }: { toast: Toast; onRemove: (id: string) =
         }}
         className="p-1 hover:bg-black/5 rounded"
       >
-        <X className="w-4 h-4 text-gray-400" />
+        <X className="w-4 h-4 text-muted-foreground" />
       </button>
     </div>
   )

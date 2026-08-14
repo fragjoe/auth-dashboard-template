@@ -99,7 +99,7 @@ function AlertDialogHeader({ className, children }: AlertDialogHeaderProps) {
 
 function AlertDialogFooter({ className, children }: AlertDialogFooterProps) {
   return (
-    <div className={cn('flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2 mt-6', className)}>
+    <div className={cn('flex flex-col-reverse sm:flex-row sm:justify-end sm:gap-3 mt-6', className)}>
       {children}
     </div>
   )

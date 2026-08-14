@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Buildings, EnvelopeSimple, Lock, Warning, CircleNotch } from '@phosphor-icons/react'
+import { Building2, Mail, Lock, AlertTriangle, Loader2 } from 'lucide-react'
 import { signInWithEmail, signInWithGoogle } from '@/api/auth'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
@@ -49,34 +49,34 @@ export function LoginPage() {
 
   if (authLoading) {
     return (
-      <div className="min-h-screen bg-gray-100 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-4 border-primary-600 border-t-transparent"></div>
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-4 border-primary border-t-transparent"></div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-background flex items-center justify-center p-4">
       <div className="w-full max-w-md content-fade-in">
         {/* Login Card */}
-        <div className="bg-white border rounded-lg p-8">
+        <div className="bg-white border rounded-lg p-8 shadow-lg">
           {/* Logo & Title */}
           <div className="flex items-center justify-center gap-3 mb-8">
-            <div className="w-12 h-12 bg-primary-100 rounded-full flex items-center justify-center">
-              <Buildings weight="bold" className="w-6 h-6 text-primary-600" />
+            <div className="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center">
+              <Building2 className="w-6 h-6 text-primary" />
             </div>
-            <h1 className="text-2xl font-bold text-gray-900">PropsManager</h1>
+            <h1 className="text-2xl font-bold text-foreground">PropsManager</h1>
           </div>
           {error && (
             <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg flex items-center text-red-700">
-              <Warning weight="bold" className="w-5 h-5 mr-3 flex-shrink-0" />
+              <AlertTriangle className="w-5 h-5 mr-3 flex-shrink-0" />
               <span className="text-sm">{error}</span>
             </div>
           )}
 
           <form onSubmit={handleEmailLogin} className="space-y-4">
             <div className="relative">
-              <EnvelopeSimple weight="bold" className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
               <Input
                 type="email"
                 placeholder="Email"
@@ -89,7 +89,7 @@ export function LoginPage() {
             </div>
 
             <div className="relative">
-              <Lock weight="bold" className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
               <Input
                 type="password"
                 placeholder="Password"
@@ -103,7 +103,7 @@ export function LoginPage() {
 
             <Button type="submit" className="w-full" disabled>
               {isLoading ? (
-                <CircleNotch className="w-4 h-4 mr-2 animate-spin" />
+                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
               ) : null}
               {isLoading ? 'Memproses...' : 'Masuk'}
             </Button>
@@ -112,10 +112,10 @@ export function LoginPage() {
           <div className="mt-6">
             <div className="relative">
               <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-gray-300" />
+                <div className="w-full border-t border-border" />
               </div>
               <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-white text-gray-500">atau</span>
+                <span className="px-2 bg-white text-muted-foreground">atau</span>
               </div>
             </div>
 

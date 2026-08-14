@@ -19,8 +19,8 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-100">
-        <div className="animate-spin rounded-full h-12 w-12 border-4 border-primary-600 border-t-transparent"></div>
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="animate-spin rounded-full h-12 w-12 border-4 border-primary border-t-transparent"></div>
       </div>
     )
   }
@@ -38,8 +38,8 @@ function PublicRoute({ children }: { children: React.ReactNode }) {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-100">
-        <div className="animate-spin rounded-full h-12 w-12 border-4 border-primary-600 border-t-transparent"></div>
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="animate-spin rounded-full h-12 w-12 border-4 border-primary border-t-transparent"></div>
       </div>
     )
   }
@@ -100,8 +100,9 @@ const router = createBrowserRouter([
       </ProtectedRoute>
     ),
   },
+  // Room routes (flat URL - accessible from anywhere)
   {
-    path: '/properties/:propertyId/rooms/:roomId',
+    path: '/rooms/:id',
     element: (
       <ProtectedRoute>
         <RoomDetailPage />

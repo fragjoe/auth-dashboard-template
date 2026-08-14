@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom'
-import { PlusCircle, Door, House, Plus } from '@phosphor-icons/react'
+import { PlusCircle, DoorOpen, Home, Plus } from 'lucide-react'
 import { useQueryClient } from '@tanstack/react-query'
 import { useProperties, propertyKeys } from '@/hooks/useProperties'
 import { useRooms } from '@/hooks/useRooms'
@@ -29,7 +29,7 @@ function PropertyItem({ property }: { property: Property }) {
 
   const getStatusBadge = (rentalType: string) => {
     if (rentalType === 'per_room') {
-      return { label: 'Per Kamar', color: 'bg-blue-100 text-blue-700' }
+      return { label: 'Per Kamar', color: 'bg-emerald-100 text-emerald-700' }
     }
     return { label: 'Kosong', color: 'bg-red-100 text-red-700' }
   }
@@ -42,7 +42,7 @@ function PropertyItem({ property }: { property: Property }) {
       onClick={() => navigate(`/properties/${property.id}`)}
     >
       <div className="flex items-center gap-3 flex-1">
-        <House weight="bold" className="w-5 h-5 text-muted-foreground" />
+        <Home className="w-5 h-5 text-muted-foreground" />
         <div>
           <span className="text-foreground">{property.name}</span>
           {location && (
@@ -60,7 +60,7 @@ function PropertyItem({ property }: { property: Property }) {
 }
 
 // Room Item
-function RoomItem({ room, propertyId }: { room: Room; propertyId: string }) {
+function RoomItem({ room }: { room: Room }) {
   const navigate = useNavigate()
 
   const getStatusBadge = (status: string) => {
@@ -68,11 +68,11 @@ function RoomItem({ room, propertyId }: { room: Room; propertyId: string }) {
       case 'available':
         return { label: 'Kosong', color: 'bg-red-100 text-red-700' }
       case 'occupied':
-        return { label: 'Terisi', color: 'bg-blue-100 text-blue-700' }
+        return { label: 'Terisi', color: 'bg-emerald-100 text-emerald-700' }
       case 'maintenance':
         return { label: 'Perbaikan', color: 'bg-yellow-100 text-yellow-700' }
       default:
-        return { label: status, color: 'bg-gray-100 text-gray-700' }
+        return { label: status, color: 'bg-muted text-muted-foreground' }
     }
   }
 
@@ -85,9 +85,9 @@ function RoomItem({ room, propertyId }: { room: Room; propertyId: string }) {
   return (
     <div
       className="flex items-center gap-3 p-3 rounded-lg border bg-white hover:border-primary cursor-pointer transition-all duration-200 card-hover"
-      onClick={() => navigate(`/properties/${propertyId}/rooms/${room.id}`)}
+      onClick={() => navigate(`/rooms/${room.id}`)}
     >
-      <Door weight="bold" className="w-4 h-4 text-muted-foreground" />
+      <DoorOpen className="w-4 h-4 text-muted-foreground" />
       <div className="flex-1">
         <span className="text-foreground">{roomName}</span>
       </div>
@@ -117,7 +117,7 @@ function PerKamarPropertyItem({ property }: { property: Property }) {
           <h3 className="text-lg font-bold text-foreground">
             {property.name}
           </h3>
-          <Badge className="bg-blue-100 text-gray-600">
+          <Badge className="bg-emerald-100 text-emerald-700">
             {roomCount}
           </Badge>
         </div>
@@ -127,7 +127,7 @@ function PerKamarPropertyItem({ property }: { property: Property }) {
       {/* Rooms List */}
       <div className="space-y-2">
         {rooms.map((room) => (
-          <RoomItem key={room.id} room={room} propertyId={property.id} />
+          <RoomItem key={room.id} room={room} />
         ))}
       </div>
     </div>
@@ -145,7 +145,7 @@ function PropertyAddButton({ propertyId }: { propertyId: string }) {
       }}
       className="p-2 text-muted-foreground hover:text-foreground hover:bg-muted rounded-lg transition-colors"
     >
-      <PlusCircle weight="fill" className="w-5 h-5" />
+      <PlusCircle className="w-5 h-5" />
     </button>
   )
 }
@@ -165,7 +165,7 @@ export function PropertiesPage() {
 
   return (
     <PullToRefresh onRefresh={handleRefresh} className="no-scrollbar">
-    <div className="p-4 lg:p-6 space-y-8 max-w-7xl">
+    <div className="p-4 lg:p-6 space-y-8 max-w-3xl">
       {/* All Properties Section */}
       <section className="content-fade-in">
         {/* Section Header */}
@@ -174,7 +174,7 @@ export function PropertiesPage() {
             <h2 className="text-lg font-bold text-foreground">
               Properti
             </h2>
-            <Badge className="bg-blue-100 text-gray-700">
+            <Badge className="bg-emerald-100 text-emerald-700">
               {isLoading ? '...' : allProperties.length}
             </Badge>
           </div>
@@ -182,7 +182,7 @@ export function PropertiesPage() {
             onClick={() => navigate('/properties/new')}
             className="p-2 text-muted-foreground hover:text-foreground hover:bg-muted rounded-lg transition-colors"
           >
-            <PlusCircle weight="fill" className="w-5 h-5" />
+            <PlusCircle className="w-5 h-5" />
           </button>
         </div>
 
@@ -217,7 +217,7 @@ export function PropertiesPage() {
         <div className="text-center py-12 content-fade-in">
           <p className="text-muted-foreground mb-4">Belum ada properti</p>
           <Button onClick={() => navigate('/properties/new')}>
-            <Plus weight="bold" className="w-5 h-5 mr-2" />
+            <Plus className="w-5 h-5 mr-2" />
             Tambah Properti
           </Button>
         </div>
