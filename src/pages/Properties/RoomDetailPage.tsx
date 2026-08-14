@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { DoorOpen, Users, ArrowLeft } from 'lucide-react'
-import { CircleNotch } from '@phosphor-icons/react'
+import { DoorOpen, Users, ArrowLeft, CircleNotch, Loader2 } from 'lucide-react'
 import { useRoomById } from '@/hooks/useRooms'
 import { useTenants } from '@/hooks/useTenants'
 import { Button } from '@/components/ui/Button'

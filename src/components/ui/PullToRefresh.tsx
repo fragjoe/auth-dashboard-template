@@ -1,6 +1,6 @@
 import { useState, useRef, useCallback } from 'react'
 import { cn } from '@/lib/utils'
-import { RefreshCw } from '@phosphor-icons/react'
+import { RefreshCw } from 'lucide-react'
 
 interface PullToRefreshProps {
   children: React.ReactNode
@@ -113,7 +113,7 @@ export function PullToRefresh({ children, onRefresh, className }: PullToRefreshP
       {refreshing && (
         <div className="absolute top-0 left-0 right-0 h-16 flex items-center justify-center">
           <div className="w-8 h-8 rounded-full bg-white shadow-md flex items-center justify-center animate-spin">
-            <RefreshCw weight="bold" className="w-4 h-4 text-primary" />
+            <RefreshCw className="w-4 h-4 text-primary animate-spin" />
           </div>
         </div>
       )}
