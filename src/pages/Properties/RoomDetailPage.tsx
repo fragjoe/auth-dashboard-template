@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { DoorOpen, Users, ArrowLeft, CircleNotch, Loader2 } from 'lucide-react'
+import { DoorOpen, Users, ArrowLeft, Loader2 } from 'lucide-react'
 import { useRoomById } from '@/hooks/useRooms'
 import { useTenants } from '@/hooks/useTenants'
 import { Button } from '@/components/ui/Button'
@@ -144,7 +144,7 @@ export function RoomDetailPage() {
             <h3 className="font-semibold">Harga Sewa</h3>
           </div>
           <Button variant="ghost" size="sm">
-            <CircleNotch weight="bold" className="w-4 h-4" />
+            <Loader2 className="w-4 h-4" />
           </Button>
         </div>
         <div className="text-center py-4 text-sm text-muted-foreground border border-dashed rounded-lg">
@@ -160,7 +160,7 @@ export function RoomDetailPage() {
             <h3 className="font-semibold">Biaya Utilitas</h3>
           </div>
           <Button variant="ghost" size="sm">
-            <CircleNotch weight="bold" className="w-4 h-4" />
+            <Loader2 className="w-4 h-4" />
           </Button>
         </div>
         <div className="text-center py-4 text-sm text-muted-foreground border border-dashed rounded-lg">

@@ -1,8 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { Bell, ArrowLeft, MoreVertical, Pencil, Copy, Trash2 } from 'lucide-react'
-import { useProperty, useDeleteProperty } from '@/hooks/useProperties'
-import { useRoomById } from '@/hooks/useRooms'
+import { useDeleteProperty } from '@/hooks/useProperties'
 import { useAuth } from '@/hooks/useAuth'
 import { useToast } from '@/components/ui/Toast'
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/Avatar'
@@ -38,7 +37,9 @@ export function Header() {
 
   // Check if this is a property detail page
   const isPropertyDetail = () => {
-    return path.match(/^\/properties\/[^/]+$/) && !path.endsWith('/edit')
+    const id = path.split('/').pop()
+    // Don't show as property detail if: new page, edit page, or currently deleting
+    return path.match(/^\/properties\/[^/]+$/) && !path.endsWith('/edit') && id !== 'new' && !deleteProperty.isPending
   }
 
   // Check if this is a room detail page (flat URL /rooms/[id])
@@ -46,27 +47,18 @@ export function Header() {
     return path.match(/^\/rooms\/[^/]+$/)
   }
 
-  // Get property data
-  const propertyId = isPropertyDetail() ? path.split('/').pop() : null
-  const { data: property } = useProperty(propertyId || '')
-
-  // Get room data
-  const roomId = isRoomDetail() ? path.split('/').pop() : null
-  const { data: room } = useRoomById(roomId || '')
+  // Check if this is a property detail page (exclude "new" route and during delete)
+  const shouldShowPropertyMenu = () => {
+    const id = path.split('/').pop()
+    return path.match(/^\/properties\/[^/]+$/) && !path.endsWith('/edit') && id !== 'new' && !deleteProperty.isPending
+  }
 
   // Determine page title based on route
   const getPageTitle = () => {
     if (path === '/properties/new') return 'Tambah Properti'
     if (path.match(/^\/properties\/[^/]+\/edit$/)) return 'Edit Properti'
-    if (isRoomDetail() && room) {
-      const roomName = room.room_type
-        ? `${room.room_type} - Kamar ${room.room_number}`
-        : `Kamar ${room.room_number}`
-      return roomName
-    }
     if (isRoomDetail()) return 'Detail Kamar'
-    if (isPropertyDetail() && property) return property.name
-    if (isPropertyDetail()) return 'Detail Properti'
+    if (shouldShowPropertyMenu()) return 'Detail Properti'
     if (path === '/tenants/new') return 'Tambah Penyewa'
 
     const currentPage = navigation.find(item => path.startsWith(item.href))
@@ -127,11 +119,14 @@ export function Header() {
 
   const pageTitle = getPageTitle()
   const showBack = needsBackButton()
-  const showPropertyMenu = isPropertyDetail()
+  const showPropertyMenu = shouldShowPropertyMenu()
   const showGreeting = isMainPage()
   const firstName = getFirstName()
   const avatarUrl = getAvatarUrl()
   const initials = getInitials()
+
+  // Get property ID from path for edit/delete actions
+  const propertyId = shouldShowPropertyMenu() ? path.split('/').pop() : null
 
   const handleEdit = () => {
     setShowMenu(false)
@@ -149,6 +144,7 @@ export function Header() {
         await deleteProperty.mutateAsync(propertyId)
         toast('Properti berhasil dihapus', 'success')
         setShowDeleteConfirm(false)
+        setShowMenu(false)
         navigate('/properties', { replace: true })
       } catch (error) {
         toast('Gagal menghapus properti', 'error')

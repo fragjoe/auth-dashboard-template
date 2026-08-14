@@ -45,16 +45,10 @@ export function PullToRefresh({ children, onRefresh, className }: PullToRefreshP
     if (pullDistance >= 50 && !refreshing) {
       setRefreshing(true)
 
-      // Haptic feedback
-      navigator.vibrate?.(10)
-
       try {
         await onRefresh()
-        // Success haptic
-        navigator.vibrate?.([10, 30, 10])
       } catch (error) {
-        // Error haptic
-        navigator.vibrate?.([50, 30, 50, 30, 50])
+        // Handle error silently
       } finally {
         setRefreshing(false)
       }

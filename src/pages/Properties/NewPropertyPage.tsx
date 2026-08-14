@@ -442,8 +442,15 @@ export function NewPropertyPage() {
               <Input
                 id="postal_code"
                 name="postal_code"
+                type="text"
+                inputMode="numeric"
+                pattern="[0-9]*"
                 value={formData.postal_code}
-                onChange={handleChange}
+                onChange={(e) => {
+                  // Only allow numbers
+                  const value = e.target.value.replace(/[^0-9]/g, '')
+                  setFormData((prev) => ({ ...prev, postal_code: value }))
+                }}
                 placeholder="Contoh: 40132"
               />
             </div>
@@ -455,10 +462,16 @@ export function NewPropertyPage() {
               <Input
                 id="phone"
                 name="phone"
-                value={formData.phone}
-                onChange={handleChange}
-                placeholder="Contoh: 081234567890"
                 type="tel"
+                inputMode="tel"
+                pattern="[0-9+\-\s]*"
+                value={formData.phone}
+                onChange={(e) => {
+                  // Only allow numbers, +, -, and spaces
+                  const value = e.target.value.replace(/[^0-9+\-\s]/g, '')
+                  setFormData((prev) => ({ ...prev, phone: value }))
+                }}
+                placeholder="Contoh: 081234567890"
               />
             </div>
           </div>

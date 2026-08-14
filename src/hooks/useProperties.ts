@@ -24,6 +24,9 @@ export function useProperty(id: string) {
     queryFn: () => api.getProperty(id),
     select: (data) => data.data,
     enabled: !!id,
+    // Auto-cancel previous requests when id changes
+    staleTime: 0,
+    gcTime: 0,
   })
 }
 
