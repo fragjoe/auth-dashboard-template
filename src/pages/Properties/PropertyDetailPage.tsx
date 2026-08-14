@@ -194,7 +194,7 @@ export function PropertyDetailPage() {
             <h3 className="font-semibold">Harga Sewa</h3>
           </div>
           <Button variant="ghost" size="sm">
-            <Plus weight="bold" className="w-4 h-4" />
+            <Plus className="w-4 h-4" />
           </Button>
         </div>
 
@@ -227,7 +227,7 @@ export function PropertyDetailPage() {
             <h3 className="font-semibold">Biaya Utilitas</h3>
           </div>
           <Button variant="ghost" size="sm">
-            <Plus weight="bold" className="w-4 h-4" />
+            <Plus className="w-4 h-4" />
           </Button>
         </div>
 
