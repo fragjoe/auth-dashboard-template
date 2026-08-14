@@ -100,7 +100,7 @@ export function Header() {
   const getInitials = () => {
     if (!user) return 'U'
     const fullName = user.user_metadata?.full_name || user.user_metadata?.name || user.email || 'U'
-    return fullName.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)
+    return fullName.split(' ').map((n: string) => n[0]).join('').toUpperCase().slice(0, 2)
   }
 
   // Check if back button is needed

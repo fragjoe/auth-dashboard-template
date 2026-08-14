@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { MapPin, Phone, Home, Users, Plus, DoorOpen } from 'lucide-react'
+import { MapPin, Phone, Home, Users, DoorOpen } from 'lucide-react'
+import { Plus } from '@phosphor-icons/react'
 import { useProperty } from '@/hooks/useProperties'
 import { useRooms, useCreateRooms } from '@/hooks/useRooms'
 import { Button } from '@/components/ui/Button'
