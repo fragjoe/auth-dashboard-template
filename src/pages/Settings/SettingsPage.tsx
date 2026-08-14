@@ -1,11 +1,23 @@
+import { useState } from 'react'
 import { User, Database, LogOut } from 'lucide-react'
 import { useAuth } from '@/hooks/useAuth'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { signOut } from '@/api/auth'
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogFooter,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogAction,
+  AlertDialogCancel,
+} from '@/components/ui/AlertDialog'
 
 export function SettingsPage() {
   const { user } = useAuth()
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false)
 
   // Mask URL for security
   const maskUrl = (url: string) => {
@@ -25,9 +37,9 @@ export function SettingsPage() {
     <div className="p-4 lg:p-6 max-w-3xl content-fade-in">
       <div className="space-y-6">
         {/* Profile Section */}
-        <div className="bg-white border rounded-lg p-6">
+        <div className="bg-white border rounded-2xl p-6">
           <div className="flex items-center gap-3 mb-6">
-            <div className="bg-primary-100 p-2 rounded-lg">
+            <div className="bg-primary-100 p-2 rounded-2xl">
               <User className="w-5 h-5 text-primary-600" />
             </div>
             <div>
@@ -66,9 +78,9 @@ export function SettingsPage() {
         </div>
 
         {/* Database Info */}
-        <div className="bg-white border rounded-lg p-6">
+        <div className="bg-white border rounded-2xl p-6">
           <div className="flex items-center gap-3 mb-6">
-            <div className="bg-emerald-100 p-2 rounded-lg">
+            <div className="bg-emerald-100 p-2 rounded-2xl">
               <Database className="w-5 h-5 text-emerald-600" />
             </div>
             <div>
@@ -93,7 +105,7 @@ export function SettingsPage() {
         {/* Logout Button */}
         <Button
           variant="destructive"
-          onClick={handleSignOut}
+          onClick={() => setShowLogoutConfirm(true)}
           className="w-full"
         >
           <LogOut className="w-5 h-5 mr-2" />
@@ -106,6 +118,29 @@ export function SettingsPage() {
           <p className="mt-1">Built with React, Vite, TypeScript, Tailwind, Supabase</p>
         </div>
       </div>
+
+      {/* Logout Confirmation Dialog */}
+      <AlertDialog open={showLogoutConfirm} onOpenChange={setShowLogoutConfirm}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Keluar dari Aplikasi</AlertDialogTitle>
+            <AlertDialogDescription>
+              Apakah Anda yakin ingin keluar? Anda perlu login kembali untuk mengakses aplikasi.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={() => setShowLogoutConfirm(false)}>
+              Batal
+            </AlertDialogCancel>
+            <AlertDialogAction
+              variant="destructive"
+              onClick={handleSignOut}
+            >
+              Keluar
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   )
 }

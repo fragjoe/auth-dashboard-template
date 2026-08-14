@@ -143,9 +143,9 @@ function PropertyAddButton({ propertyId }: { propertyId: string }) {
         e.stopPropagation()
         navigate(`/properties/${propertyId}`)
       }}
-      className="p-2 text-muted-foreground hover:text-foreground hover:bg-muted rounded-lg transition-colors"
+      className="p-2 text-primary hover:text-primary/80 hover:bg-primary/10 rounded-lg transition-colors"
     >
-      <PlusCircle className="w-5 h-5" />
+      <PlusCircle className="w-5 h-5" strokeWidth={3} />
     </button>
   )
 }
@@ -180,9 +180,9 @@ export function PropertiesPage() {
           </div>
           <button
             onClick={() => navigate('/properties/new')}
-            className="p-2 text-muted-foreground hover:text-foreground hover:bg-muted rounded-lg transition-colors"
+            className="p-2 text-primary hover:text-primary/80 hover:bg-primary/10 rounded-lg transition-colors"
           >
-            <PlusCircle className="w-5 h-5" />
+            <PlusCircle className="w-5 h-5" strokeWidth={3} />
           </button>
         </div>
 

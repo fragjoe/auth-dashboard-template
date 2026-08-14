@@ -5,7 +5,7 @@ import { cn } from '@/lib/utils'
 const navItems = [
   { name: 'Properti', href: '/properties', icon: Building2 },
   { name: 'Kalender', href: '/calendar', icon: Calendar, disabled: true },
-  { name: 'Penyewa', href: '/tenants', icon: User },
+  { name: 'Penyewa', href: '/tenants', icon: User, disabled: true },
   { name: 'Pengaturan', href: '/settings', icon: Settings },
 ]
 
@@ -21,7 +21,7 @@ export function BottomNav() {
             return (
               <div
                 key={item.name}
-                className="flex flex-1 flex-col items-center justify-center gap-1 py-2 text-xs text-muted-foreground"
+                className="relative flex flex-1 flex-col items-center justify-center gap-1 py-2 text-xs text-muted-foreground opacity-50"
               >
                 <item.icon className="w-6 h-6" />
                 <span>{item.name}</span>

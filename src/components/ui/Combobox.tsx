@@ -49,7 +49,7 @@ export function Combobox({
         <div className="relative flex items-center">
           <input
             className={cn(
-              "flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
+              "flex h-10 w-full rounded-md border border-input bg-white px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus-foreground focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
               error && "border-red-500 focus:ring-red-500",
               selectedOption && "pr-8"
             )}

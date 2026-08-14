@@ -159,9 +159,9 @@ export function EditPropertyPage() {
     <div className="p-4 lg:p-6 max-w-2xl w-full content-fade-in">
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Basic Info */}
-        <div className="bg-white border rounded-lg p-6 space-y-6">
+        <div className="bg-white border rounded-2xl p-6 space-y-6">
           <div className="flex items-center gap-3 mb-4">
-            <div className="bg-primary-100 p-2 rounded-lg">
+            <div className="bg-primary-100 p-2 rounded-2xl">
               <Building2 className="w-5 h-5 text-primary-600" />
             </div>
             <h2 className="text-lg font-semibold">Informasi Properti</h2>
@@ -238,7 +238,7 @@ export function EditPropertyPage() {
               onChange={handleChange}
               placeholder="Deskripsi tambahan tentang properti..."
               rows={4}
-              className="w-full px-3 py-2 border border-input rounded-md bg-background text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+              className="w-full px-3 py-2 border border-input rounded-md bg-white text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
             />
           </div>
 
@@ -259,9 +259,9 @@ export function EditPropertyPage() {
         </div>
 
         {/* Location */}
-        <div className="bg-white border rounded-lg p-6 space-y-6">
+        <div className="bg-white border rounded-2xl p-6 space-y-6">
           <div className="flex items-center gap-3 mb-4">
-            <div className="bg-primary-100 p-2 rounded-lg">
+            <div className="bg-primary-100 p-2 rounded-2xl">
               <MapPin className="w-5 h-5 text-primary-600" />
             </div>
             <h2 className="text-lg font-semibold">Lokasi & Kontak</h2>

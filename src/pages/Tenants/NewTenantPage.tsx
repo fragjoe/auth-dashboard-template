@@ -164,9 +164,9 @@ export function NewTenantPage() {
 
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Personal Info */}
-        <div className="bg-white border rounded-lg p-6 space-y-6">
+        <div className="bg-white border rounded-2xl p-6 space-y-6">
           <div className="flex items-center gap-3 mb-4">
-            <div className="bg-primary-100 p-2 rounded-lg">
+            <div className="bg-primary-100 p-2 rounded-2xl">
               <User className="w-5 h-5 text-primary-600" />
             </div>
             <h2 className="text-lg font-semibold">Informasi Penyewa</h2>
@@ -246,9 +246,9 @@ export function NewTenantPage() {
         </div>
 
         {/* Location */}
-        <div className="bg-white border rounded-lg p-6 space-y-6">
+        <div className="bg-white border rounded-2xl p-6 space-y-6">
           <div className="flex items-center gap-3 mb-4">
-            <div className="bg-emerald-100 p-2 rounded-lg">
+            <div className="bg-emerald-100 p-2 rounded-2xl">
               <Calendar className="w-5 h-5 text-emerald-600" />
             </div>
             <h2 className="text-lg font-semibold">Lokasi</h2>
@@ -295,7 +295,7 @@ export function NewTenantPage() {
 
           {/* Show info for per_property */}
           {selectedProperty && !isPerRoom && (
-            <div className="p-4 bg-emerald-50 border border-emerald-200 rounded-lg">
+            <div className="p-4 bg-emerald-50 border border-emerald-200 rounded-2xl">
               <p className="text-emerald-800 text-sm">
                 Properti ini disewakan secara <strong>per properti</strong>.
                 Satu properti untuk satu penyewa.
@@ -305,9 +305,9 @@ export function NewTenantPage() {
         </div>
 
         {/* Duration */}
-        <div className="bg-white border rounded-lg p-6 space-y-6">
+        <div className="bg-white border rounded-2xl p-6 space-y-6">
           <div className="flex items-center gap-3 mb-4">
-            <div className="bg-purple-100 p-2 rounded-lg">
+            <div className="bg-purple-100 p-2 rounded-2xl">
               <Calendar className="w-5 h-5 text-purple-600" />
             </div>
             <h2 className="text-lg font-semibold">Durasi Sewa</h2>
@@ -401,9 +401,9 @@ export function NewTenantPage() {
         </div>
 
         {/* Deposit */}
-        <div className="bg-white border rounded-lg p-6 space-y-6">
+        <div className="bg-white border rounded-2xl p-6 space-y-6">
           <div className="flex items-center gap-3 mb-4">
-            <div className="bg-emerald-100 p-2 rounded-lg">
+            <div className="bg-emerald-100 p-2 rounded-2xl">
               <CreditCard className="w-5 h-5 text-emerald-600" />
             </div>
             <h2 className="text-lg font-semibold">Pembayaran</h2>
@@ -426,7 +426,7 @@ export function NewTenantPage() {
         </div>
 
         {/* Notes */}
-        <div className="bg-white border rounded-lg p-6 space-y-6">
+        <div className="bg-white border rounded-2xl p-6 space-y-6">
           <div className="space-y-2">
             <label htmlFor="notes" className="text-sm font-medium text-foreground">
               Catatan
@@ -438,7 +438,7 @@ export function NewTenantPage() {
               onChange={handleChange}
               placeholder="Catatan tambahan tentang penyewa..."
               rows={3}
-              className="w-full px-3 py-2 border border-input rounded-md bg-background text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+              className="w-full px-3 py-2 border border-input rounded-md bg-white text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
             />
           </div>
         </div>

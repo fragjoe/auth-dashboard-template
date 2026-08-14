@@ -59,7 +59,7 @@ export function LoginPage() {
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
       <div className="w-full max-w-md content-fade-in">
         {/* Login Card */}
-        <div className="bg-white border rounded-lg p-8 shadow-lg">
+        <div className="bg-white border rounded-2xl p-8 shadow-lg">
           {/* Logo & Title */}
           <div className="flex items-center justify-center gap-3 mb-8">
             <div className="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center">
@@ -68,7 +68,7 @@ export function LoginPage() {
             <h1 className="text-2xl font-bold text-foreground">PropsManager</h1>
           </div>
           {error && (
-            <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg flex items-center text-red-700">
+            <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-2xl flex items-center text-red-700">
               <AlertTriangle className="w-5 h-5 mr-3 flex-shrink-0" />
               <span className="text-sm">{error}</span>
             </div>

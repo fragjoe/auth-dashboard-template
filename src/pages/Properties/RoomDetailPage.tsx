@@ -60,12 +60,12 @@ export function RoomDetailPage() {
       <div className="flex items-center gap-3">
         <button
           onClick={() => navigate(-1)}
-          className="p-2 -ml-2 rounded-lg hover:bg-muted"
+          className="p-2 -ml-2 rounded-2xl hover:bg-muted"
         >
           <ArrowLeft className="w-5 h-5" />
         </button>
         <div className="flex items-center gap-3">
-          <div className="bg-primary-100 p-2 rounded-lg">
+          <div className="bg-primary-100 p-2 rounded-2xl">
             <DoorOpen className="w-5 h-5 text-primary-600" />
           </div>
           <div>
@@ -78,7 +78,7 @@ export function RoomDetailPage() {
       </div>
 
       {/* Info Kamar */}
-      <div className="bg-white border rounded-lg p-4">
+      <div className="bg-white border rounded-2xl p-4">
         <h3 className="font-semibold mb-3">Info Kamar</h3>
         <div className="grid grid-cols-2 gap-3 text-sm">
           <div>
@@ -102,7 +102,7 @@ export function RoomDetailPage() {
       </div>
 
       {/* Penyewa */}
-      <div className="bg-white border rounded-lg p-4">
+      <div className="bg-white border rounded-2xl p-4">
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2">
             <Users className="w-5 h-5 text-primary" />
@@ -119,7 +119,7 @@ export function RoomDetailPage() {
         </div>
 
         {activeTenant ? (
-          <div className="flex items-center gap-3 p-3 rounded-lg border">
+          <div className="flex items-center gap-3 p-3 rounded-2xl border">
             <div className="bg-primary-100 p-2 rounded-full">
               <Users className="w-4 h-4 text-primary-600" />
             </div>
@@ -130,14 +130,14 @@ export function RoomDetailPage() {
             <Badge>Aktif</Badge>
           </div>
         ) : (
-          <div className="text-center py-6 text-sm text-muted-foreground border border-dashed rounded-lg">
+          <div className="text-center py-6 text-sm text-muted-foreground border border-dashed rounded-2xl">
             Kamar kosong
           </div>
         )}
       </div>
 
       {/* Harga */}
-      <div className="bg-white border rounded-lg p-4">
+      <div className="bg-white border rounded-2xl p-4">
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2">
             <span className="text-primary font-bold">Rp</span>
@@ -147,13 +147,13 @@ export function RoomDetailPage() {
             <Loader2 className="w-4 h-4" />
           </Button>
         </div>
-        <div className="text-center py-4 text-sm text-muted-foreground border border-dashed rounded-lg">
+        <div className="text-center py-4 text-sm text-muted-foreground border border-dashed rounded-2xl">
           Belum ada harga sewa
         </div>
       </div>
 
       {/* Biaya */}
-      <div className="bg-white border rounded-lg p-4">
+      <div className="bg-white border rounded-2xl p-4">
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2">
             <span className="text-emerald-600 font-bold">kWh</span>
@@ -163,7 +163,7 @@ export function RoomDetailPage() {
             <Loader2 className="w-4 h-4" />
           </Button>
         </div>
-        <div className="text-center py-4 text-sm text-muted-foreground border border-dashed rounded-lg">
+        <div className="text-center py-4 text-sm text-muted-foreground border border-dashed rounded-2xl">
           Belum ada biaya utilitas
         </div>
       </div>

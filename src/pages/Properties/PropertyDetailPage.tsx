@@ -88,7 +88,7 @@ export function PropertyDetailPage() {
   return (
     <div className="p-4 lg:p-6 max-w-3xl space-y-4 content-fade-in">
       {/* Info Properti - Compact */}
-      <div className="bg-white border rounded-lg p-4">
+      <div className="bg-white border rounded-2xl p-4">
         <div className="space-y-3">
           {property.name && (
             <h2 className="text-lg font-semibold text-foreground">{property.name}</h2>
@@ -120,7 +120,7 @@ export function PropertyDetailPage() {
 
       {/* Per Properti: Penyewa (paling atas) */}
       {isPerProperty && (
-        <div className="bg-white border rounded-lg p-4">
+        <div className="bg-white border rounded-2xl p-4">
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2">
               <Users className="w-5 h-5 text-primary" />
@@ -131,7 +131,7 @@ export function PropertyDetailPage() {
               Tambah
             </Button>
           </div>
-          <div className="text-center py-6 text-sm text-muted-foreground border border-dashed rounded-lg">
+          <div className="text-center py-6 text-sm text-muted-foreground border border-dashed rounded-2xl">
             Belum ada penyewa
           </div>
         </div>
@@ -139,7 +139,7 @@ export function PropertyDetailPage() {
 
       {/* Per Kamar: Kamar */}
       {isPerRoom && (
-        <div className="bg-white border rounded-lg p-4">
+        <div className="bg-white border rounded-2xl p-4">
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2">
               <Home className="w-5 h-5 text-primary" />
@@ -159,7 +159,7 @@ export function PropertyDetailPage() {
                 return (
                   <div
                     key={room.id}
-                    className="flex items-center justify-between p-3 rounded-lg border hover:bg-muted/50 cursor-pointer transition-colors"
+                    className="flex items-center justify-between p-3 rounded-2xl border hover:bg-muted/50 cursor-pointer transition-colors"
                     onClick={() => navigate(`/rooms/${room.id}`)}
                   >
                     <div className="flex items-center gap-3">
@@ -179,7 +179,7 @@ export function PropertyDetailPage() {
               })}
             </div>
           ) : (
-            <div className="text-center py-6 text-sm text-muted-foreground border border-dashed rounded-lg">
+            <div className="text-center py-6 text-sm text-muted-foreground border border-dashed rounded-2xl">
               Belum ada kamar
             </div>
           )}
@@ -187,7 +187,7 @@ export function PropertyDetailPage() {
       )}
 
       {/* Harga Sewa */}
-      <div className="bg-white border rounded-lg p-4">
+      <div className="bg-white border rounded-2xl p-4">
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2">
             <span className="text-primary font-semibold">Rp</span>
@@ -201,7 +201,7 @@ export function PropertyDetailPage() {
         {property.rental_prices && property.rental_prices.length > 0 ? (
           <div className="space-y-2">
             {property.rental_prices.map((price) => (
-              <div key={price.id} className="flex items-center justify-between p-3 rounded-lg border">
+              <div key={price.id} className="flex items-center justify-between p-3 rounded-2xl border">
                 <div>
                   <p className="font-medium">{formatCurrency(price.amount)}</p>
                   <p className="text-xs text-muted-foreground">{formatInterval(price.interval_type)}</p>
@@ -213,14 +213,14 @@ export function PropertyDetailPage() {
             ))}
           </div>
         ) : (
-          <div className="text-center py-4 text-sm text-muted-foreground border border-dashed rounded-lg">
+          <div className="text-center py-4 text-sm text-muted-foreground border border-dashed rounded-2xl">
             Belum ada harga sewa
           </div>
         )}
       </div>
 
       {/* Biaya */}
-      <div className="bg-white border rounded-lg p-4">
+      <div className="bg-white border rounded-2xl p-4">
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2">
             <span className="text-emerald-600 font-semibold">kWh</span>
@@ -234,7 +234,7 @@ export function PropertyDetailPage() {
         {property.expenses && property.expenses.length > 0 ? (
           <div className="space-y-2">
             {property.expenses.map((expense) => (
-              <div key={expense.id} className="flex items-center justify-between p-3 rounded-lg border">
+              <div key={expense.id} className="flex items-center justify-between p-3 rounded-2xl border">
                 <div>
                   <p className="font-medium capitalize">{expense.expense_type}</p>
                   <p className="text-xs text-muted-foreground">
@@ -248,7 +248,7 @@ export function PropertyDetailPage() {
             ))}
           </div>
         ) : (
-          <div className="text-center py-4 text-sm text-muted-foreground border border-dashed rounded-lg">
+          <div className="text-center py-4 text-sm text-muted-foreground border border-dashed rounded-2xl">
             Belum ada biaya utilitas
           </div>
         )}

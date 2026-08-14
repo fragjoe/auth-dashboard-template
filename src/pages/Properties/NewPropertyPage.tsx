@@ -248,9 +248,9 @@ export function NewPropertyPage() {
 
       {/* Step 1: Basic Info */}
       {step === 1 && (
-        <div className="bg-white border rounded-lg p-6 space-y-6">
+        <div className="bg-white border rounded-2xl p-6 space-y-6">
           <div className="flex items-center gap-3 mb-4">
-            <div className="bg-primary-100 p-2 rounded-lg">
+            <div className="bg-primary-100 p-2 rounded-2xl">
               <Building2 className="w-5 h-5 text-primary-600" />
             </div>
             <div>
@@ -299,7 +299,7 @@ export function NewPropertyPage() {
               onChange={handleChange}
               placeholder="Deskripsi tambahan tentang properti..."
               rows={4}
-              className="w-full px-3 py-2 border border-input rounded-md bg-background text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+              className="w-full px-3 py-2 border border-input rounded-md bg-white text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
             />
           </div>
         </div>
@@ -307,9 +307,9 @@ export function NewPropertyPage() {
 
       {/* Step 2: Rental Type */}
       {step === 2 && (
-        <div className="bg-white border rounded-lg p-6 space-y-6">
+        <div className="bg-white border rounded-2xl p-6 space-y-6">
           <div className="flex items-center gap-3 mb-4">
-            <div className="bg-primary-100 p-2 rounded-lg">
+            <div className="bg-primary-100 p-2 rounded-2xl">
               <Building2 className="w-5 h-5 text-primary-600" />
             </div>
             <div>
@@ -321,7 +321,7 @@ export function NewPropertyPage() {
 
           <div className="space-y-4">
             <label
-              className={`flex items-start p-4 border-2 rounded-lg cursor-pointer transition-colors ${
+              className={`flex items-start p-4 border-2 rounded-2xl cursor-pointer transition-colors ${
                 formData.rental_type === 'per_room'
                   ? 'border-primary bg-primary/5'
                   : errors.rental_type
@@ -347,7 +347,7 @@ export function NewPropertyPage() {
             </label>
 
             <label
-              className={`flex items-start p-4 border-2 rounded-lg cursor-pointer transition-colors ${
+              className={`flex items-start p-4 border-2 rounded-2xl cursor-pointer transition-colors ${
                 formData.rental_type === 'per_property'
                   ? 'border-primary bg-primary/5'
                   : errors.rental_type
@@ -377,9 +377,9 @@ export function NewPropertyPage() {
 
       {/* Step 3: Location */}
       {step === 3 && (
-        <div className="bg-white border rounded-lg p-6 space-y-6">
+        <div className="bg-white border rounded-2xl p-6 space-y-6">
           <div className="flex items-center gap-3 mb-4">
-            <div className="bg-primary-100 p-2 rounded-lg">
+            <div className="bg-primary-100 p-2 rounded-2xl">
               <MapPin className="w-5 h-5 text-primary-600" />
             </div>
             <h2 className="text-lg font-semibold">Lokasi & Kontak</h2>
@@ -390,7 +390,7 @@ export function NewPropertyPage() {
             <label className="text-sm font-medium text-foreground">
               Foto Properti
             </label>
-            <div className="border-2 border-dashed border-border rounded-lg p-8 flex flex-col items-center justify-center text-center">
+            <div className="border-2 border-dashed border-border rounded-2xl p-8 flex flex-col items-center justify-center text-center">
               <div className="w-12 h-12 bg-muted rounded-full flex items-center justify-center mb-3">
                 <svg className="w-6 h-6 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
