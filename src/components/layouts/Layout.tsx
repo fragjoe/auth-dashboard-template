@@ -80,9 +80,23 @@ export function Layout({ children }: { children: ReactNode }) {
   if (isSettings) {
     variants = settingsVariants
   } else if (isNavigatingToSettings) {
-    variants = { ...slideVariants, exit: { x: '100%', opacity: 0 } }
+    variants = {
+      enter: (direction: number) => ({
+        x: direction > 0 ? '100%' : '-100%',
+        opacity: 0,
+      }),
+      center: { x: 0, opacity: 1 },
+      exit: { x: '100%', opacity: 0 },
+    }
   } else if (isNavigatingFromSettings) {
-    variants = { ...slideVariants, enter: { x: '100%', opacity: 0 } }
+    variants = {
+      enter: { x: '100%', opacity: 0 },
+      center: { x: 0, opacity: 1 },
+      exit: (direction: number) => ({
+        x: direction > 0 ? '-100%' : '100%',
+        opacity: 0,
+      }),
+    }
   }
 
   // Handle navigation
