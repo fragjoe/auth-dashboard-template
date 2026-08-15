@@ -65,7 +65,7 @@ export function LoginPage() {
             <div className="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center">
               <Building2 className="w-6 h-6 text-primary" />
             </div>
-            <h1 className="text-2xl font-bold text-foreground">PropsManager INI CUMA TESTING AJA</h1>
+            <h1 className="text-2xl font-bold text-foreground">PropsManager</h1>
           </div>
           {error && (
             <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-2xl flex items-center text-red-700">
@@ -144,7 +144,7 @@ export function LoginPage() {
                   d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
                 />
               </svg>
-              Masuk dengan Google SKUY
+              Masuk dengan Google
             </Button>
           </div>
         </div>
