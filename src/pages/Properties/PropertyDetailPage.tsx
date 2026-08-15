@@ -78,7 +78,9 @@ export function PropertyDetailPage() {
     return (
       <div className="p-6 text-center">
         <h2 className="text-xl font-semibold text-foreground">Properti tidak ditemukan</h2>
-        <Button className="mt-4" onClick={() => navigate('/properties')}>
+        <Button className="mt-4" onClick={() => {
+          navigate('/properties')
+        }}>
           Kembali ke Daftar
         </Button>
       </div>
@@ -126,7 +128,9 @@ export function PropertyDetailPage() {
               <Users className="w-5 h-5 text-primary" />
               <h3 className="font-semibold">Penyewa</h3>
             </div>
-            <Button size="sm" onClick={() => navigate(`/tenants/new?property_id=${id}`)}>
+            <Button size="sm" onClick={() => {
+              navigate(`/tenants/new?property_id=${id}`)
+            }}>
               <Plus className="w-4 h-4 mr-1" />
               Tambah
             </Button>
@@ -160,7 +164,9 @@ export function PropertyDetailPage() {
                   <div
                     key={room.id}
                     className="flex items-center justify-between p-3 rounded-2xl border hover:bg-muted/50 cursor-pointer transition-colors"
-                    onClick={() => navigate(`/rooms/${room.id}`)}
+                    onClick={() => {
+                      navigate(`/rooms/${room.id}`)
+                    }}
                   >
                     <div className="flex items-center gap-3">
                       <DoorOpen className="w-4 h-4 text-muted-foreground" />

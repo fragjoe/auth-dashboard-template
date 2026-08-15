@@ -155,7 +155,9 @@ export function NewTenantPage() {
     <div className="p-4 lg:p-6 max-w-3xl w-full content-fade-in">
       {/* Header */}
       <div className="mb-8">
-        <Button variant="ghost" onClick={() => navigate(-1)} className="mb-4">
+        <Button variant="ghost" onClick={() => {
+          navigate(-1)
+        }} className="mb-4">
           Kembali
         </Button>
         <h1 className="text-2xl font-bold text-foreground">Tambah Penyewa Baru</h1>
@@ -445,7 +447,9 @@ export function NewTenantPage() {
 
         {/* Submit Buttons */}
         <div className="flex items-center justify-end gap-3">
-          <Button type="button" variant="outline" onClick={() => navigate(-1)}>
+          <Button type="button" variant="outline" onClick={() => {
+            navigate(-1)
+          }}>
             Batal
           </Button>
           <Button type="submit" disabled={isSubmitting}>

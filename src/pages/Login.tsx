@@ -17,7 +17,7 @@ export function LoginPage() {
   // Redirect if already logged in
   useEffect(() => {
     if (user && !authLoading) {
-      navigate('/dashboard', { replace: true })
+      navigate('/properties', { replace: true })
     }
   }, [user, authLoading, navigate])
 
@@ -31,7 +31,7 @@ export function LoginPage() {
       setError(response.error)
       setIsLoading(false)
     } else {
-      navigate('/dashboard')
+      navigate('/properties')
     }
   }
 

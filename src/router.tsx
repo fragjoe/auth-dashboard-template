@@ -32,7 +32,7 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
   return <Layout>{children}</Layout>
 }
 
-// Public route wrapper (redirect to dashboard if logged in)
+// Public route wrapper (redirect to /properties if logged in)
 function PublicRoute({ children }: { children: React.ReactNode }) {
   const { user, isLoading } = useAuth()
 
@@ -45,7 +45,7 @@ function PublicRoute({ children }: { children: React.ReactNode }) {
   }
 
   if (user) {
-    return <Navigate to="/dashboard" replace />
+    return <Navigate to="/properties" replace />
   }
 
   return <>{children}</>
@@ -62,10 +62,6 @@ const router = createBrowserRouter([
   },
   {
     path: '/',
-    element: <Navigate to="/properties" replace />,
-  },
-  {
-    path: '/dashboard',
     element: <Navigate to="/properties" replace />,
   },
   {

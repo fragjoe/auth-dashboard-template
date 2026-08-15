@@ -102,7 +102,8 @@ export function Header() {
       path.match(/^\/properties\/[^/]+\/edit$/) ||
       isPropertyDetail() ||
       isRoomDetail() ||
-      path === '/tenants/new'
+      path === '/tenants/new' ||
+      path === '/settings'
     )
   }
 
@@ -130,7 +131,9 @@ export function Header() {
 
   const handleEdit = () => {
     setShowMenu(false)
-    if (propertyId) navigate(`/properties/${propertyId}/edit`)
+    if (propertyId) {
+      navigate(`/properties/${propertyId}/edit`)
+    }
   }
 
   const handleDelete = () => {
@@ -161,7 +164,9 @@ export function Header() {
           <div className="flex items-center gap-3">
             {showBack && (
               <button
-                onClick={() => navigate(-1)}
+                onClick={() => {
+                  navigate(-1)
+                }}
                 className="p-2 -ml-2 rounded-lg hover:bg-white/10 transition-colors"
               >
                 <ArrowLeft className="w-5 h-5 text-white" />
@@ -174,13 +179,18 @@ export function Header() {
                   <Skeleton className="h-5 w-24 rounded" />
                 </div>
               ) : (
-                <div className="flex items-center gap-3">
-                  <Avatar size="sm">
+                <button
+                  onClick={() => {
+                    navigate('/settings')
+                  }}
+                  className="flex items-center gap-3 hover:bg-white/10 rounded-lg p-1 -ml-1 transition-colors"
+                >
+                  <Avatar size="sm" className="ring-2 ring-white/50">
                     <AvatarImage src={avatarUrl} alt={firstName} />
                     <AvatarFallback className="bg-white/20 text-white">{initials}</AvatarFallback>
                   </Avatar>
                   <h1 className="text-lg font-semibold text-white">Hi, {firstName}</h1>
-                </div>
+                </button>
               )
             ) : (
               <h1 className="text-lg font-semibold text-white truncate">{pageTitle}</h1>
@@ -192,7 +202,7 @@ export function Header() {
             {showPropertyMenu ? (
               <>
                 <button
-                onClick={() => setShowMenu(!showMenu)}
+                  onClick={() => setShowMenu(!showMenu)}
                   className="p-2 rounded-lg hover:bg-white/10 transition-colors"
                 >
                   <MoreVertical className="w-5 h-5 text-white" />
@@ -227,12 +237,12 @@ export function Header() {
                   </div>
                 )}
               </>
-            ) : isRoomDetail() ? null : (
+            ) : (path === '/properties' || path === '/tenants') ? (
               <button className="p-2 -mr-2 rounded-lg hover:bg-white/10 relative">
                 <Bell className="w-5 h-5 text-white fill-white" />
                 <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full ring-2 ring-white animate-pulse" />
               </button>
-            )}
+            ) : null}
           </div>
         </div>
       </header>

@@ -47,7 +47,9 @@ export function RoomDetailPage() {
     return (
       <div className="p-4 lg:p-6 text-center">
         <h2 className="text-xl font-semibold text-foreground">Kamar tidak ditemukan</h2>
-        <Button className="mt-4" onClick={() => navigate(-1)}>
+        <Button className="mt-4" onClick={() => {
+          navigate(-1)
+        }}>
           Kembali
         </Button>
       </div>
@@ -59,7 +61,9 @@ export function RoomDetailPage() {
       {/* Header dengan Back button */}
       <div className="flex items-center gap-3">
         <button
-          onClick={() => navigate(-1)}
+          onClick={() => {
+            navigate(-1)
+          }}
           className="p-2 -ml-2 rounded-2xl hover:bg-muted"
         >
           <ArrowLeft className="w-5 h-5" />

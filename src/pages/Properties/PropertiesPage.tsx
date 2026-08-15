@@ -36,10 +36,14 @@ function PropertyItem({ property }: { property: Property }) {
 
   const statusBadge = getStatusBadge(property.rental_type)
 
+  const handleNavigate = () => {
+    navigate(`/properties/${property.id}`)
+  }
+
   return (
     <div
       className="flex items-center justify-between p-4 rounded-lg border bg-white hover:border-primary cursor-pointer transition-all duration-200 card-hover"
-      onClick={() => navigate(`/properties/${property.id}`)}
+      onClick={handleNavigate}
     >
       <div className="flex items-center gap-3 flex-1">
         <Home className="w-5 h-5 text-muted-foreground" />
@@ -82,10 +86,14 @@ function RoomItem({ room }: { room: Room }) {
 
   const statusBadge = getStatusBadge(room.status)
 
+  const handleNavigate = () => {
+    navigate(`/rooms/${room.id}`)
+  }
+
   return (
     <div
       className="flex items-center gap-3 p-3 rounded-lg border bg-white hover:border-primary cursor-pointer transition-all duration-200 card-hover"
-      onClick={() => navigate(`/rooms/${room.id}`)}
+      onClick={handleNavigate}
     >
       <DoorOpen className="w-4 h-4 text-muted-foreground" />
       <div className="flex-1">
@@ -167,43 +175,47 @@ export function PropertiesPage() {
     <PullToRefresh onRefresh={handleRefresh} className="no-scrollbar">
     <div className="p-4 lg:p-6 space-y-8 max-w-3xl">
       {/* All Properties Section */}
-      <section className="content-fade-in">
-        {/* Section Header */}
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-2">
-            <h2 className="text-lg font-bold text-foreground">
-              Properti
-            </h2>
-            <Badge className="bg-emerald-100 text-emerald-700">
-              {isLoading ? '...' : allProperties.length}
-            </Badge>
+      {allProperties.length > 0 && (
+        <section>
+          {/* Section Header */}
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-2">
+              <h2 className="text-lg font-bold text-foreground">
+                Properti
+              </h2>
+              <Badge className="bg-emerald-100 text-emerald-700">
+                {isLoading ? '...' : allProperties.length}
+              </Badge>
+            </div>
+            <button
+              onClick={() => {
+                navigate('/properties/new')
+              }}
+              className="p-2 text-primary hover:text-primary/80 hover:bg-primary/10 rounded-lg transition-colors"
+            >
+              <PlusCircle className="w-5 h-5" strokeWidth={3} />
+            </button>
           </div>
-          <button
-            onClick={() => navigate('/properties/new')}
-            className="p-2 text-primary hover:text-primary/80 hover:bg-primary/10 rounded-lg transition-colors"
-          >
-            <PlusCircle className="w-5 h-5" strokeWidth={3} />
-          </button>
-        </div>
 
-        {/* Loading State */}
-        {isLoading && (
-          <PropertyListSkeleton count={3} />
-        )}
+          {/* Loading State */}
+          {isLoading && (
+            <PropertyListSkeleton count={3} />
+          )}
 
-        {/* Properties List */}
-        {!isLoading && allProperties.length > 0 && (
-          <div className="space-y-3 content-fade-in">
-            {allProperties.map((property) => (
-              <PropertyItem key={property.id} property={property} />
-            ))}
-          </div>
-        )}
-      </section>
+          {/* Properties List */}
+          {!isLoading && allProperties.length > 0 && (
+            <div className="space-y-3">
+              {allProperties.map((property) => (
+                <PropertyItem key={property.id} property={property} />
+              ))}
+            </div>
+          )}
+        </section>
+      )}
 
       {/* Per Kamar Section */}
       {!isLoading && perRoom.length > 0 && (
-        <section className="space-y-6 content-fade-in" style={{ animationDelay: '100ms' }}>
+        <section className="space-y-6">
           <div className="space-y-6">
             {perRoom.map((property) => (
               <PerKamarPropertyItem key={property.id} property={property} />
@@ -214,9 +226,11 @@ export function PropertiesPage() {
 
       {/* Empty State */}
       {!isLoading && properties?.length === 0 && (
-        <div className="text-center py-12 content-fade-in">
+        <div className="text-center py-12">
           <p className="text-muted-foreground mb-4">Belum ada properti</p>
-          <Button onClick={() => navigate('/properties/new')}>
+          <Button onClick={() => {
+            navigate('/properties/new')
+          }}>
             <Plus className="w-5 h-5 mr-2" />
             Tambah Properti
           </Button>

@@ -148,7 +148,9 @@ export function EditPropertyPage() {
     return (
       <div className="p-6 text-center">
         <h2 className="text-xl font-semibold text-foreground">Properti tidak ditemukan</h2>
-        <Button className="mt-4" onClick={() => navigate('/properties')}>
+        <Button className="mt-4" onClick={() => {
+          navigate('/properties')
+        }}>
           Kembali ke Daftar
         </Button>
       </div>
@@ -339,7 +341,9 @@ export function EditPropertyPage() {
           <Button
             type="button"
             variant="outline"
-            onClick={() => navigate(-1)}
+            onClick={() => {
+              navigate(-1)
+            }}
           >
             Batal
           </Button>

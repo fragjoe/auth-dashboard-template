@@ -145,7 +145,6 @@ await createProperty.mutateAsync(newProperty)
 
 Routes are protected by authentication:
 - `/login` - Public route
-- `/dashboard` - Protected
 - `/properties` - Protected
 - `/properties/new` - Protected
 - `/properties/:id` - Protected
