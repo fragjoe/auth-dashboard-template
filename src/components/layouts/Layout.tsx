@@ -86,11 +86,11 @@ export function Layout({ children }: { children: ReactNode }) {
         opacity: 0,
       }),
       center: { x: 0, opacity: 1 },
-      exit: { x: '100%', opacity: 0 },
+      exit: () => ({ x: '100%', opacity: 0 }),
     }
   } else if (isNavigatingFromSettings) {
     variants = {
-      enter: { x: '100%', opacity: 0 },
+      enter: () => ({ x: '100%', opacity: 0 }),
       center: { x: 0, opacity: 1 },
       exit: (direction: number) => ({
         x: direction > 0 ? '-100%' : '100%',
