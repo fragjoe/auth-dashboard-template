@@ -33,25 +33,12 @@ export function RoomDetailPage() {
       ? `Kamar ${room.room_number}`
       : 'Kamar'
 
-  if (isLoadingRoom) {
+  if (isLoadingRoom || !room) {
     return (
       <div className="p-4 lg:p-6 max-w-3xl space-y-4">
         <Skeleton className="h-20 w-full" />
         <Skeleton className="h-32 w-full" />
         <Skeleton className="h-32 w-full" />
-      </div>
-    )
-  }
-
-  if (!room) {
-    return (
-      <div className="p-4 lg:p-6 text-center">
-        <h2 className="text-xl font-semibold text-foreground">Kamar tidak ditemukan</h2>
-        <Button className="mt-4" onClick={() => {
-          navigate(-1)
-        }}>
-          Kembali
-        </Button>
       </div>
     )
   }

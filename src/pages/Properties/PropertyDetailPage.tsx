@@ -66,23 +66,10 @@ export function PropertyDetailPage() {
     setNewRoom({ room_number: '', room_type: '', description: '', floor: '', count: 1 })
   }
 
-  if (isLoading) {
+  if (isLoading || !property) {
     return (
       <div className="p-4 lg:p-6 max-w-3xl">
         <DetailPageSkeleton />
-      </div>
-    )
-  }
-
-  if (!property) {
-    return (
-      <div className="p-6 text-center">
-        <h2 className="text-xl font-semibold text-foreground">Properti tidak ditemukan</h2>
-        <Button className="mt-4" onClick={() => {
-          navigate('/properties')
-        }}>
-          Kembali ke Daftar
-        </Button>
       </div>
     )
   }
