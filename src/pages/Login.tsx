@@ -65,7 +65,7 @@ export function LoginPage() {
             <div className="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center">
               <Building2 className="w-6 h-6 text-primary" />
             </div>
-            <h1 className="text-2xl font-bold text-foreground">PropsManager TESTING LAGI AHH</h1>
+            <h1 className="text-2xl font-bold text-foreground">PropsManager</h1>
           </div>
           {error && (
             <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-2xl flex items-center text-red-700">
