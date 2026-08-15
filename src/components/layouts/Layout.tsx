@@ -18,84 +18,108 @@ const navigation = [
 const ANIMATION_DURATION = 0.3
 
 // Define page depth based on URL patterns
-// Higher depth = more "nested" the page is
 function getPageDepth(pathname: string): number {
-  // Root/main pages = depth 0
-  if (['/properties', '/tenants', '/calendar', '/laporan', '/'].includes(pathname)) {
-    return 0
-  }
-
-  // "New" pages = depth 1 (same level as root but forward motion)
-  if (['/properties/new', '/tenants/new'].includes(pathname)) {
-    return 1
-  }
-
-  // First-level detail pages = depth 1
-  if (pathname.match(/^\/properties\/[^/]+$/) && !pathname.endsWith('/edit')) {
-    return 1
-  }
-  if (pathname === '/settings') {
-    return 1
-  }
-
-  // Second-level detail pages (edit, nested) = depth 2
-  if (pathname.match(/^\/properties\/[^/]+\/edit$/)) {
-    return 2
-  }
-  if (pathname.match(/^\/rooms\/[^/]+$/)) {
-    return 2
-  }
-
+  if (['/properties', '/tenants', '/calendar', '/laporan', '/'].includes(pathname)) return 0
+  if (['/properties/new', '/tenants/new'].includes(pathname)) return 1
+  if (pathname.match(/^\/properties\/[^/]+$/) && !pathname.endsWith('/edit')) return 1
+  if (pathname === '/settings') return 1
+  if (pathname.match(/^\/properties\/[^/]+\/edit$/)) return 2
+  if (pathname.match(/^\/rooms\/[^/]+$/)) return 2
   return 0
 }
 
-// Slide variants - enters from right, exits to left (iOS native feel)
+// Regular slide variants
 const slideVariants = {
   enter: (direction: number) => ({
     x: direction > 0 ? '100%' : '-100%',
     opacity: 0,
   }),
-  center: {
-    x: 0,
-    opacity: 1,
-  },
+  center: { x: 0, opacity: 1 },
   exit: (direction: number) => ({
     x: direction > 0 ? '-100%' : '100%',
     opacity: 0,
   }),
 }
 
-// Settings drawer variants - enters from LEFT (where avatar is), exits to left
+// Settings variants - enters from left
 const settingsVariants = {
-  enter: {
-    x: '-100%',
-    opacity: 0,
-  },
-  center: {
-    x: 0,
-    opacity: 1,
-  },
-  exit: {
-    x: '-100%',
-    opacity: 0,
-  },
+  enter: () => ({ x: '-100%', opacity: 0 }),
+  center: { x: 0, opacity: 1 },
+  exit: () => ({ x: '-100%', opacity: 0 }),
+}
+
+// Pages that should maintain their state during exit animation
+const PAGES_WITH_DYNAMIC_CONTENT = [
+  '/properties',
+  '/tenants',
+]
+
+function hasDynamicContent(pathname: string): boolean {
+  return PAGES_WITH_DYNAMIC_CONTENT.some(p => pathname.startsWith(p))
 }
 
 export function Layout({ children }: { children: ReactNode }) {
   const location = useLocation()
+  const [displayPath, setDisplayPath] = useState(location.pathname)
+  const [displayChildren, setDisplayChildren] = useState(children)
   const prevPathRef = useRef(location.pathname)
+  const isTransitioningRef = useRef(false)
 
-  // Calculate depth for current path
   const currentDepth = getPageDepth(location.pathname)
   const prevDepth = getPageDepth(prevPathRef.current)
-
-  // Determine animation direction
+  const prevPath = prevPathRef.current
   const direction = currentDepth >= prevDepth ? 1 : -1
 
-  // Check if this is settings page (special drawer behavior)
+  const isNavigatingToSettings = prevPath === '/properties' && location.pathname === '/settings'
+  const isNavigatingFromSettings = prevPath === '/settings' && location.pathname === '/properties'
   const isSettings = location.pathname === '/settings'
+  const shouldPreserveState = hasDynamicContent(prevPath)
 
-  // Update prev ref after render
+  // Determine variants
+  let variants = slideVariants
+  if (isSettings) {
+    variants = settingsVariants
+  } else if (isNavigatingToSettings) {
+    variants = { ...slideVariants, exit: { x: '100%', opacity: 0 } }
+  } else if (isNavigatingFromSettings) {
+    variants = { ...slideVariants, enter: { x: '100%', opacity: 0 } }
+  }
+
+  // Handle navigation
+  useEffect(() => {
+    if (location.pathname === displayPath) return
+
+    // Mark as transitioning
+    isTransitioningRef.current = true
+
+    // If we're preserving state (going back to main pages), keep the old page visible
+    if (shouldPreserveState) {
+      // Just update the display after animation
+      const timer = setTimeout(() => {
+        setDisplayPath(location.pathname)
+        setDisplayChildren(children)
+        isTransitioningRef.current = false
+      }, ANIMATION_DURATION * 1000 + 50)
+
+      return () => clearTimeout(timer)
+    } else {
+      // Normal transition - immediate swap
+      setDisplayPath(location.pathname)
+      setDisplayChildren(children)
+      const timer = setTimeout(() => {
+        isTransitioningRef.current = false
+      }, 50)
+      return () => clearTimeout(timer)
+    }
+  }, [location.pathname])
+
+  // Sync children when not transitioning
+  useEffect(() => {
+    if (!isTransitioningRef.current) {
+      setDisplayChildren(children)
+    }
+  }, [children])
+
   useEffect(() => {
     prevPathRef.current = location.pathname
   }, [location.pathname])
@@ -104,8 +128,6 @@ export function Layout({ children }: { children: ReactNode }) {
     await signOut()
     window.location.href = '/login'
   }
-
-  const variants = isSettings ? settingsVariants : slideVariants
 
   return (
     <div className="min-h-screen bg-background">
@@ -123,10 +145,7 @@ export function Layout({ children }: { children: ReactNode }) {
             const isActive = location.pathname.startsWith(item.href)
             if (item.disabled) {
               return (
-                <div
-                  key={item.name}
-                  className="flex items-center px-3 py-2.5 mb-1 rounded-lg text-white/60 cursor-not-allowed"
-                >
+                <div key={item.name} className="flex items-center px-3 py-2.5 mb-1 rounded-lg text-white/60 cursor-not-allowed">
                   <item.icon className="w-5 h-5 mr-3" />
                   {item.name}
                 </div>
@@ -138,9 +157,7 @@ export function Layout({ children }: { children: ReactNode }) {
                 to={item.href}
                 className={cn(
                   'flex items-center px-3 py-2.5 mb-1 rounded-lg transition-all duration-200',
-                  isActive
-                    ? 'bg-white text-primary font-semibold shadow-md'
-                    : 'text-white hover:bg-primary-foreground/10'
+                  isActive ? 'bg-white text-primary font-semibold shadow-md' : 'text-white hover:bg-primary-foreground/10'
                 )}
               >
                 <item.icon className="w-5 h-5 mr-3" />
@@ -151,10 +168,7 @@ export function Layout({ children }: { children: ReactNode }) {
         </nav>
 
         <div className="p-4 border-t border-primary-foreground/20">
-          <button
-            onClick={handleSignOut}
-            className="flex items-center w-full px-3 py-2.5 text-white/80 hover:bg-white/10 rounded-lg transition-colors"
-          >
+          <button onClick={handleSignOut} className="flex items-center w-full px-3 py-2.5 text-white/80 hover:bg-white/10 rounded-lg transition-colors">
             <LogOut className="w-5 h-5 mr-3" />
             Keluar
           </button>
@@ -165,23 +179,24 @@ export function Layout({ children }: { children: ReactNode }) {
       <div className="lg:ml-64 flex flex-col min-h-screen w-full">
         <Header />
         <main className="relative flex-1">
-          <AnimatePresence mode="wait" initial={false} custom={direction}>
+          <AnimatePresence
+            mode={isNavigatingToSettings || isNavigatingFromSettings ? 'sync' : 'wait'}
+            initial={false}
+            custom={direction}
+          >
             <motion.div
-              key={location.pathname}
+              key={displayPath}
               custom={direction}
               variants={variants}
               initial="enter"
               animate="center"
               exit="exit"
-              transition={{
-                type: 'tween',
-                ease: [0.25, 0.1, 0.25, 1],
-                duration: ANIMATION_DURATION,
-              }}
-              className="absolute inset-0 pt-16 pb-[120px] lg:pt-16 lg:pb-6 overflow-hidden bg-background"
+              transition={{ type: 'tween', ease: [0.25, 0.1, 0.25, 1], duration: ANIMATION_DURATION }}
+              className="absolute inset-0 pt-16 pb-[120px] lg:pt-16 lg:pb-6 overflow-hidden"
+              style={{ backgroundColor: 'hsl(var(--background))' }}
             >
               <div className="h-full overflow-y-auto no-scrollbar">
-                {children}
+                {displayChildren}
               </div>
             </motion.div>
           </AnimatePresence>

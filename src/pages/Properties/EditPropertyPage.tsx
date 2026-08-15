@@ -136,23 +136,10 @@ export function EditPropertyPage() {
     }
   }
 
-  if (isLoading) {
+  if (isLoading || !property) {
     return (
       <div className="p-4 lg:p-6 max-w-3xl w-full">
         <FormSkeleton />
-      </div>
-    )
-  }
-
-  if (!property) {
-    return (
-      <div className="p-6 text-center">
-        <h2 className="text-xl font-semibold text-foreground">Properti tidak ditemukan</h2>
-        <Button className="mt-4" onClick={() => {
-          navigate('/properties')
-        }}>
-          Kembali ke Daftar
-        </Button>
       </div>
     )
   }
